@@ -175,46 +175,54 @@ class ObjectGeneration {
     }
 }
 
-class ObstacleTypeZero extends ObjectGeneration{
+class Obstacle extends ObjectGeneration {
+    constructor(x,y){
+        super(x,y);
+    }
+    updateObstaclePosition(speed=1){}
+
+    obstacleSetup(){}
+    genObstacle(){}
+}
+
+class ObstacleTypeZero extends Obstacle{
     constructor(x, y){
         super(x,y);
-        this.obstacleZeroSetup();
-        this.genObstacleZero();
+        this.obstacleSetup();
+        this.genObstacle();
     }
-    obstacleZeroSetup(){
+    obstacleSetup() {
         this.width = 45;
         this.height = 150;
     }
 
-    genObstacleZero() {
+    genObstacle() {
         this.ctx.fillStyle = "blue";
         this.ctx.fillRect(this.x, this.y, this.width, this.height);
     }
-
     updateObstaclePosition(speed=1){
         this.x -= speed;
-        this.genObstacleZero();
+        this.genObstacle();
     }
 }
 
-class ObstacleTypeOne extends ObjectGeneration{
+class ObstacleTypeOne extends Obstacle{
     constructor(x,y){
         super(x,y);
-        this.obstacleOneSetup();
-        this.genObstacleOne()
+        this.obstacleSetup();
+        this.genObstacle()
     }
-    obstacleOneSetup() {
+    obstacleSetup() {
         this.width = 60;
         this.height = 200;
     }
-    genObstacleOne() {
+    genObstacle() {
         this.ctx.fillStyle = "red";
         this.ctx.fillRect(this.x, this.y, this.width, this.height);
     }
-
     updateObstaclePosition(speed=1){
         this.x += speed;
-        this.genObstacleOne();
+        this.genObstacle();
     }
 }
 

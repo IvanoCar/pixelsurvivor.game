@@ -218,26 +218,35 @@ class ObstacleTypeOne extends ObjectGeneration{
     }
 }
 
-class Powerup extends ObjectGeneration{
+class Powerup extends ObjectGeneration {
     constructor(x,y){
         super(x,y);
         this.frame = game.frameCount;
         this.powerupSetup();
-        this.genPowerUp()
+
     }
     powerupSetup() {
         this.width = 25;
         this.height = 25;
-    }
-    genPowerUp() {
-        this.ctx.fillStyle = "green";
-        this.ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
     keepActive(noFrames=400){
         if(game.frameCount - this.frame <= noFrames) { // && not collided | check for collision with player here
             this.genPowerUp();
         }
+    }
+    genPowerUp(){}
+}
+
+class JumpPowerUp extends Powerup{
+    constructor(x,y){
+        super(x,y);
+        this.genPowerUp();
+    }
+
+    genPowerUp() {
+        this.ctx.fillStyle = "green";
+        this.ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
     static activateJumpPowerup(){ // on collision with powerup object  |  CHANGE PLAYER APPEREANCE + duration
@@ -250,7 +259,7 @@ class Powerup extends ObjectGeneration{
         game.player.jumpingPowerUp = false;
     }
 }
-class JumpPowerUp{}
+
 class ScorePowerUp{}
 class CollisionHandler{}
 
@@ -274,7 +283,7 @@ class ObjectGenController {
         } if (game.isCondEveryInterval(this.intervalTwo)){
             this.obstaclesOne.push(new ObstacleTypeOne(-35, this.y - 350))
         }  if (game.isCondEveryInterval(1002)){
-            this.powerups[0] = (new Powerup(randInt(30, this.x - 30), this.y - (randInt(130, 150))));
+            this.powerups[0] = (new JumpPowerUp(randInt(30, this.x - 30), this.y - (randInt(130, 150))));
         }
 
     }

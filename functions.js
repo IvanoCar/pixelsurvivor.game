@@ -370,26 +370,22 @@ class CollisionHandler extends SplitScreen {
         for (var i = 0; i < this.intervalsArray.length - 1; i++) { // && skip frames
             if (game.player.x >= this.intervalsArray[i] && game.player.x <= this.intervalsArray[i + 1]) {
                 //console.log([this.intervalsArray[i], this.intervalsArray[i + 1]]);
-                for (var j = 0; i < game.objectControl.obstaclesZero.length; j+=1) {
+                for (var j = 0; j < game.objectControl.obstaclesZero.length; j+=1) {
+                    //console.log([this.intervalsArray, "For"]);
                     //alert(game.objectControl.obstaclesZero.length);
-                    try {
-                        if ((game.objectControl.obstaclesZero[j].x >= this.intervalsArray[i] && game.objectControl.obstaclesZero[j].x <= this.intervalsArray[i + 1])) {
-
-                            console.log([j, "Same interval", game.objectControl.obstaclesZero[j].x]);
-                        } else {
-                            //console.log([j, "Not in the same interval", game.objectControl.obstaclesZero[j].x]);
-                            /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
-                             endGame();*/
-                        }
-                    } catch(TypeError) {
-                        break;
+                    if ((game.objectControl.obstaclesZero[j].x >= this.intervalsArray[i] && game.objectControl.obstaclesZero[j].x <= this.intervalsArray[i + 1])) {
+                        //console.log([j, "Same interval", game.objectControl.obstaclesZero[j].x]);
+                        //console.log([this.intervalsArray, "Yes."]);
+                    } else {
+                        //console.log([j, "Not in the same interval", game.objectControl.obstaclesZero[j].x]);
+                        //console.log(this.intervalsArray);
+                        /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
+                            endGame();*/
                     }
                 }
-                //break;
+                break;
             }
         }
-
-
     }
 }
 

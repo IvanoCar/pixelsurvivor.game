@@ -369,7 +369,6 @@ class CollisionHandler extends SplitScreen {
         this.intervalsArray = this.getArray();
     }
 
-
     checkInterval() {
         //collisionBool = false;
         for (var i = 0; i < this.intervalsArray.length - 1; i++) { // && skip frames
@@ -379,10 +378,10 @@ class CollisionHandler extends SplitScreen {
                     //console.log([this.intervalsArray, "For"]);
                     //alert(game.objectControl.obstaclesZero.length);
                     if(Utility.isBetween(game.objectControl.obstaclesZero[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
-                        console.log([j, "Same interval", game.objectControl.obstaclesZero[j].x]);
+                        //console.log([j, "Same interval", game.objectControl.obstaclesZero[j].x]);
                         //console.log([this.intervalsArray, "Yes."]);
                         /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
-                         endGame();*/
+                            endGame();*/
                     } else {
                         //console.log([j, "Not in the same interval", game.objectControl.obstaclesZero[j].x]);
                         //console.log(this.intervalsArray);

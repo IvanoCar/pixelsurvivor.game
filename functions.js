@@ -143,8 +143,11 @@ class GameController extends Canvas{
     constructor(){
         super(800, 350);
         this.frameCount = 0;
+        this.screenIntervals = new SplitScreen(this.canvas.width, 10).getArray();
+        alert(this.screenIntervals);
         this.player = new Player(this.canvas, this.ctx);
         this.objectControl = new ObjectGenController();
+
     }
 
     keyEventHandler(){
@@ -266,6 +269,7 @@ class JumpPowerUp extends Powerup{
 }
 
 class ScorePowerUp{}
+class ScoreController{}
 class CollisionHandler{}
 
 class ObjectGenController {
@@ -341,11 +345,10 @@ class ObjectGenController {
 
 class SplitScreen {
 
-    constructor(noIntervals){
+    constructor(screenWidth, noIntervals){
         this.array = [];
-        this.max = game.canvas.width;
+        this.max = screenWidth;
         this.splitScreen(noIntervals);
-        alert(this.array);
     }
 
     splitScreen(chunks) {
@@ -354,10 +357,12 @@ class SplitScreen {
             i = this.max/chunks + i;
         }
     }
+    getArray(){
+        return this.array;
+    }
 }
 
 game = new GameController();
-split = new SplitScreen();
 
 
 function update(){

@@ -143,8 +143,7 @@ class GameController extends Canvas{
     constructor(){
         super(800, 350);
         this.frameCount = 0;
-        this.screenIntervals = new SplitScreen(this.canvas.width, 10).getArray();
-        alert(this.screenIntervals);
+        this.collisionControl = new CollisionHandler(this.canvas.width);
         this.player = new Player(this.canvas, this.ctx);
         this.objectControl = new ObjectGenController();
 
@@ -268,9 +267,6 @@ class JumpPowerUp extends Powerup{
     }
 }
 
-class ScorePowerUp{}
-class ScoreController{}
-class CollisionHandler{}
 
 class ObjectGenController {
     constructor(){
@@ -361,6 +357,23 @@ class SplitScreen {
         return this.array;
     }
 }
+
+class CollisionHandler extends SplitScreen{
+    constructor(screenWidth){
+        super(screenWidth, 10);
+        this.intervals = this.getArray();
+        alert(this.intervals);
+    }
+
+}
+
+class ScorePowerUp{}
+class ScoreController{}
+
+
+
+
+
 
 game = new GameController();
 

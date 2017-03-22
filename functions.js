@@ -367,19 +367,25 @@ class CollisionHandler extends SplitScreen {
 
     checkInterval() {
         //collisionBool = false;
-        for (var i = 0; i < this.intervalsArray.length; i++) { // && skip frames
+        for (var i = 0; i < this.intervalsArray.length - 1; i++) { // && skip frames
             if (game.player.x >= this.intervalsArray[i] && game.player.x <= this.intervalsArray[i + 1]) {
-                console.log([this.intervalsArray[i], this.intervalsArray[i + 1]]);
-                /*for (var j = 0; i < game.objectControl.obstaclesZero.length; j+=1) {
-                    console.log(game.objectControl.obstaclesZero.length);
-                     /*if(!(game.objectControl.obstaclesZero[j].x >= this.intervalsArray[i] && game.objectControl.obstaclesZero[j].x <= this.intervalsArray[i+1])) {
-                         console.log([j,"Not in the same interval"]);
-                     } else {
-                         console.log([j,"Same interval"]);
-                        /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
-                         endGame();
+                //console.log([this.intervalsArray[i], this.intervalsArray[i + 1]]);
+                for (var j = 0; i < game.objectControl.obstaclesZero.length; j+=1) {
+                    //alert(game.objectControl.obstaclesZero.length);
+                    try {
+                        if ((game.objectControl.obstaclesZero[j].x >= this.intervalsArray[i] && game.objectControl.obstaclesZero[j].x <= this.intervalsArray[i + 1])) {
+
+                            console.log([j, "Same interval", game.objectControl.obstaclesZero[j].x]);
+                        } else {
+                            //console.log([j, "Not in the same interval", game.objectControl.obstaclesZero[j].x]);
+                            /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
+                             endGame();*/
+                        }
+                    } catch(TypeError) {
+                        break;
                     }
-                }*/
+                }
+                //break;
             }
         }
 
@@ -389,10 +395,6 @@ class CollisionHandler extends SplitScreen {
 
 class ScorePowerUp{}
 class ScoreController{}
-
-
-
-
 
 
 game = new GameController();

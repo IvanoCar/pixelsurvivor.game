@@ -20,11 +20,15 @@ function getCanvasElement(){
     return canvas;
 }
 
+class Utility {
+    static isBetween(no, a, b){
+        return (no >= a && no <= b);
+    }
 
-function randInt(a,b) {
-    return Math.floor(Math.random()*(b-a+1)+a);
+    static randInt(a,b) {
+        return Math.floor(Math.random()*(b-a+1)+a);
+    }
 }
-
 class Resource{}
 Resource.PLAYER_STANDING = "normal.png";
 Resource.PLAYER_JUMPING = "jump.png";
@@ -291,7 +295,7 @@ class ObjectGenController {
             this.obstaclesOne.push(new ObstacleTypeOne(-35, this.y - 350));
         }
         if (game.isCondEveryInterval(1002)){
-            this.powerups[0] = (new JumpPowerUp(randInt(30, this.x - 30), this.y - (randInt(130, 150))));
+            this.powerups[0] = (new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
         }
 
     }
@@ -365,22 +369,23 @@ class CollisionHandler extends SplitScreen {
         this.intervalsArray = this.getArray();
     }
 
+
     checkInterval() {
         //collisionBool = false;
         for (var i = 0; i < this.intervalsArray.length - 1; i++) { // && skip frames
-            if (game.player.x >= this.intervalsArray[i] && game.player.x <= this.intervalsArray[i + 1]) {
+            if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
                 //console.log([this.intervalsArray[i], this.intervalsArray[i + 1]]);
                 for (var j = 0; j < game.objectControl.obstaclesZero.length; j+=1) {
                     //console.log([this.intervalsArray, "For"]);
                     //alert(game.objectControl.obstaclesZero.length);
-                    if ((game.objectControl.obstaclesZero[j].x >= this.intervalsArray[i] && game.objectControl.obstaclesZero[j].x <= this.intervalsArray[i + 1])) {
-                        //console.log([j, "Same interval", game.objectControl.obstaclesZero[j].x]);
+                    if(Utility.isBetween(game.objectControl.obstaclesZero[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
+                        console.log([j, "Same interval", game.objectControl.obstaclesZero[j].x]);
                         //console.log([this.intervalsArray, "Yes."]);
+                        /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
+                         endGame();*/
                     } else {
                         //console.log([j, "Not in the same interval", game.objectControl.obstaclesZero[j].x]);
                         //console.log(this.intervalsArray);
-                        /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
-                            endGame();*/
                     }
                 }
                 break;

@@ -352,19 +352,39 @@ class SplitScreen {
             this.array.push(this.max/chunks + i);
             i = this.max/chunks + i;
         }
+        this.array.splice(0, 0, 0);
     }
     getArray(){
         return this.array;
     }
 }
 
-class CollisionHandler extends SplitScreen{
-    constructor(screenWidth){
+class CollisionHandler extends SplitScreen {
+    constructor(screenWidth) {
         super(screenWidth, 10);
-        this.intervals = this.getArray();
-        alert(this.intervals);
+        this.intervalsArray = this.getArray();
     }
 
+    checkInterval() {
+        //collisionBool = false;
+        for (var i = 0; i < this.intervalsArray.length; i++) { // && skip frames
+            if (game.player.x >= this.intervalsArray[i] && game.player.x <= this.intervalsArray[i + 1]) {
+                console.log([this.intervalsArray[i], this.intervalsArray[i + 1]]);
+                /*for (var j = 0; i < game.objectControl.obstaclesZero.length; j+=1) {
+                    console.log(game.objectControl.obstaclesZero.length);
+                     /*if(!(game.objectControl.obstaclesZero[j].x >= this.intervalsArray[i] && game.objectControl.obstaclesZero[j].x <= this.intervalsArray[i+1])) {
+                         console.log([j,"Not in the same interval"]);
+                     } else {
+                         console.log([j,"Same interval"]);
+                        /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
+                         endGame();
+                    }
+                }*/
+            }
+        }
+
+
+    }
 }
 
 class ScorePowerUp{}
@@ -388,6 +408,8 @@ function update(){
     game.objectControl.updatePowerupStatus();
     game.player.updatePlayerPosition();
     game.objectControl.increaseDifficulty();
+    game.collisionControl.checkInterval();
+
     requestAnimationFrame(update);
 }
 

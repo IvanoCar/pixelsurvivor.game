@@ -12,7 +12,7 @@ gravity = 0.3;
 function getCanvasContext() {
     canvas = document.getElementById(Resource.CANVAS_NAME);
     ctx = canvas.getContext(Resource.CANVAS_CONTEXT);
-    return ctx;a
+    return ctx;
 }
 
 function getCanvasElement(){
@@ -180,9 +180,6 @@ class Obstacle extends ObjectGeneration {
         super(x,y);
     }
     updateObstaclePosition(speed=1){}
-
-    obstacleSetup(){}
-    genObstacle(){}
 }
 
 class ObstacleTypeZero extends Obstacle{
@@ -284,13 +281,16 @@ class ObjectGenController {
         this.intervalTwo = 200;
         this.intervalCap = 90;
 
+
     }
     pushObject(){
         if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){
             this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.y - 150))
-        } if (game.isCondEveryInterval(this.intervalTwo)){
-            this.obstaclesOne.push(new ObstacleTypeOne(-35, this.y - 350))
-        }  if (game.isCondEveryInterval(1002)){
+        }
+        if (game.isCondEveryInterval(this.intervalTwo)){
+            this.obstaclesOne.push(new ObstacleTypeOne(-35, this.y - 350));
+        }
+        if (game.isCondEveryInterval(1002)){
             this.powerups[0] = (new JumpPowerUp(randInt(30, this.x - 30), this.y - (randInt(130, 150))));
         }
 
@@ -339,26 +339,25 @@ class ObjectGenController {
     }
 }
 
-function splitScreen(array, breakpoint=4) {
-    for(var i = 0; i < array.length; i+=1){
-        if(array.length <= breakpoint) {
-            array.push(array[i] / 2);
-            array.push((array[i] / 2) + array[i]); // add if > max
-        }
-        else
-            break;
-    }
-    array.sort().splice(0,1);
-    array.push(0);
-    return array.sort().filter(function(item, pos, ary) {
-        return !pos || item != ary[pos - 1];
-    })
-}
-game = new GameController();
-alert(game.canvas.width);
-result = splitScreen([game.canvas.width]);
-alert(result.sort());
+class SplitScreen {
 
+    constructor(noIntervals){
+        this.array = [];
+        this.max = game.canvas.width;
+        this.splitScreen(noIntervals);
+        alert(this.array);
+    }
+
+    splitScreen(chunks) {
+        for(var i = 0; this.max > i; ){
+            this.array.push(this.max/chunks + i);
+            i = this.max/chunks + i;
+        }
+    }
+}
+
+game = new GameController();
+split = new SplitScreen();
 
 
 function update(){
@@ -371,8 +370,6 @@ function update(){
     game.objectControl.updatePowerupStatus();
     game.player.updatePlayerPosition();
     game.objectControl.increaseDifficulty();
-    //alert(game.obstacleControl.obstacles.length);
-    console.log(game.objectControl.obstaclesZero.length, game.objectControl.obstaclesOne.length);
     requestAnimationFrame(update);
 }
 

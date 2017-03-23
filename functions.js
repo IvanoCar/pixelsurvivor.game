@@ -329,16 +329,16 @@ class ObjectGenController {
 
 class SplitScreen {
 
-    constructor(screenWidth, noIntervals){
+    constructor(screenWidth, noIntervals) {
         this.array = [];
         this.max = screenWidth;
         this.splitScreen(noIntervals);
     }
 
-    splitScreen(chunks) {
-        for(var i = 0; this.max > i; ){
-            this.array.push(this.max/chunks + i);
-            i = this.max/chunks + i;
+    splitScreen(intervals) {
+        for(var i = 0; this.max > i;) {
+            this.array.push(this.max/intervals + i);
+            i = this.max/intervals + i;
         }
         this.array.splice(0, 0, 0);
     }
@@ -350,11 +350,10 @@ class SplitScreen {
 class CollisionHandler extends SplitScreen {
     constructor(screenWidth) {
         super(screenWidth, 10);
-        this.intervalsArray = this.getArray();
+        this.intervalsArray = this.getArray(); // split leftright side.
     }
 
     checkInterval() {
-        //collisionBool = false;
         for (var i = 0; i < this.intervalsArray.length - 1; i++) { // && skip frames
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
                 this.loopObstacles(game.objectControl.obstaclesZero, 2, i);
@@ -371,7 +370,7 @@ class CollisionHandler extends SplitScreen {
             obstacleArray[j].updateObstaclePosition(multiplier * game.objectControl.speedIncreaseCoef);
 
             if(Utility.isBetween(obstacleArray[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
-                /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
+                /*if(checkCollisionsOnTwoObjects(player, obstacleArray[j]))
                  endGame();*/
             }
         }

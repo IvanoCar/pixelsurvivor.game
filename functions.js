@@ -150,6 +150,7 @@ class GameController extends Canvas{
         this.collisionControl = new CollisionHandler(this.canvas.width);
         this.player = new Player(this.canvas, this.ctx);
         this.objectControl = new ObjectGenController();
+        this.gameover = false;
 
     }
 
@@ -171,6 +172,8 @@ class GameController extends Canvas{
     clearCanvas(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
+
+    endGame(){}
 }
 
 class ObjectGeneration {
@@ -253,6 +256,7 @@ class JumpPowerUp extends Powerup{
     constructor(x,y){
         super(x,y);
         this.genPowerUp();
+        this.activationframe = 0;
     }
 
     genPowerUp() {
@@ -261,13 +265,16 @@ class JumpPowerUp extends Powerup{
     }
 
     static activateJumpPowerup(){ // on collision with powerup object  |  CHANGE PLAYER APPEREANCE + duration
-        game.player.speed = 3;
+        game.player.speed = 3.5;
         game.player.jumpingPowerUp = true;
+        JumpPowerUp.activationframe = game.frameCount;
+        console.log("Jump activated.");
     }
 
     static deactivateJumpPowerup() {
-        game.player.speed = 5;
+        game.player.speed = 5.5;
         game.player.jumpingPowerUp = false;
+        console.log("Jump deactivated.");
     }
 }
 
@@ -304,6 +311,7 @@ class ObjectGenController {
         if(!(this.powerups.length == 0)) {
             this.powerups[0].keepActive();
         }
+
     }
 
     increaseDifficulty(){
@@ -349,8 +357,13 @@ class SplitScreen {
 
 class CollisionHandler extends SplitScreen {
     constructor(screenWidth) {
-        super(screenWidth, 10);
+        super(screenWidth, 20);
         this.intervalsArray = this.getArray(); // split leftright side.
+    }
+
+    static checkCollisionOnTwoObjects(object1, object2) {
+        return (object1.x < object2.x + object2.width  && object1.x + object1.width  > object2.x &&
+            object1.y < object2.y + object2.height && object1.y + object1.height > object2.y)
     }
 
     checkInterval() {
@@ -358,6 +371,7 @@ class CollisionHandler extends SplitScreen {
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
                 this.loopObstacles(game.objectControl.obstaclesZero, 2, i);
                 this.loopObstacles(game.objectControl.obstaclesOne, 1.25, i);
+                this.loopPowerUps(game.objectControl.powerups, i);
                 break;
             }
             CollisionHandler.popExtra(game.objectControl.obstaclesZero, 0);
@@ -370,11 +384,29 @@ class CollisionHandler extends SplitScreen {
             obstacleArray[j].updateObstaclePosition(multiplier * game.objectControl.speedIncreaseCoef);
 
             if(Utility.isBetween(obstacleArray[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
-                /*if(checkCollisionsOnTwoObjects(player, obstacleArray[j]))
-                 endGame();*/
+                if(CollisionHandler.checkCollisionOnTwoObjects(game.player, obstacleArray[j])) {
+                    //console.log("Collision.");
+                    game.gameover = true;
+                }
             }
         }
     }
+
+    loopPowerUps(powerupArray, i) {
+        for (var j = 0; j < powerupArray.length; j+=1) {
+            if(Utility.isBetween(powerupArray[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
+                if(CollisionHandler.checkCollisionOnTwoObjects(game.player, powerupArray[j])) {
+                    console.log("Collision with powerup.");
+                    JumpPowerUp.activateJumpPowerup();
+                    powerupArray.splice(j,1);
+                    break;
+                    //endGame();
+                }
+            }
+        }
+    }
+
+
 
     static popExtra(obstaclesArray, mode) {
         if(mode == 0) {
@@ -386,6 +418,8 @@ class CollisionHandler extends SplitScreen {
         }
     }
 
+
+
 }
 
 class ScorePowerUp{}
@@ -394,8 +428,11 @@ class ScoreController{}
 
 game = new GameController();
 
-
 function update(){
+    /*if(game.gameover){
+        game.endGame();
+        return;
+    }*/
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;

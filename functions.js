@@ -299,22 +299,6 @@ class ObjectGenController {
         }
 
     }
-    updateAllPosZero(){
-        for (var i = 0; i < this.obstaclesZero.length; i += 1) {
-            this.obstaclesZero[i].updateObstaclePosition(2 * this.speedIncreaseCoef);
-        }
-        if(this.obstaclesZero[1] && this.obstaclesZero[1].x <= -31){
-            this.obstaclesZero.splice(0,2);
-        }
-    }
-    updateAllPosOne(){
-        for (var i = 0; i<this.obstaclesOne.length;i+=1){
-            this.obstaclesOne[i].updateObstaclePosition(1.25 * this.speedIncreaseCoef);
-        }
-        if(this.obstaclesOne[1] && this.obstaclesOne[1].x >= this.canvas.width + 31){
-            this.obstaclesOne.splice(0,2);
-        }
-    }
 
     updatePowerupStatus(){
         if(!(this.powerups.length == 0)) {
@@ -373,24 +357,36 @@ class CollisionHandler extends SplitScreen {
         //collisionBool = false;
         for (var i = 0; i < this.intervalsArray.length - 1; i++) { // && skip frames
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
-                //console.log([this.intervalsArray[i], this.intervalsArray[i + 1]]);
-                for (var j = 0; j < game.objectControl.obstaclesZero.length; j+=1) {
-                    //console.log([this.intervalsArray, "For"]);
-                    //alert(game.objectControl.obstaclesZero.length);
-                    if(Utility.isBetween(game.objectControl.obstaclesZero[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
-                        //console.log([j, "Same interval", game.objectControl.obstaclesZero[j].x]);
-                        //console.log([this.intervalsArray, "Yes."]);
-                        /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
-                            endGame();*/
-                    } else {
-                        //console.log([j, "Not in the same interval", game.objectControl.obstaclesZero[j].x]);
-                        //console.log(this.intervalsArray);
-                    }
-                }
+                this.loopObstacles(game.objectControl.obstaclesZero, 2, i);
+                this.loopObstacles(game.objectControl.obstaclesOne, 1.25, i);
                 break;
+            }
+            CollisionHandler.popExtra(game.objectControl.obstaclesZero, 0);
+            CollisionHandler.popExtra(game.objectControl.obstaclesOne, 1);
+        }
+    }
+
+    loopObstacles(obstacleArray, multiplier,  i) {
+        for (var j = 0; j < obstacleArray.length; j+=1) {
+            obstacleArray[j].updateObstaclePosition(multiplier * game.objectControl.speedIncreaseCoef);
+
+            if(Utility.isBetween(obstacleArray[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
+                /*if(checkCollisionsOnTwoObjects(player, obstacles[j]))
+                 endGame();*/
             }
         }
     }
+
+    static popExtra(obstaclesArray, mode) {
+        if(mode == 0) {
+            if (obstaclesArray[1] && obstaclesArray[1].x <= -31)
+                obstaclesArray.splice(0, 2);
+        } else { // if mode == 1
+            if(obstaclesArray[1] && obstaclesArray[1].x >= game.objectControl.canvas.width + 31)
+                obstaclesArray.splice(0, 2);
+        }
+    }
+
 }
 
 class ScorePowerUp{}
@@ -405,12 +401,10 @@ function update(){
     game.keyEventHandler();
     game.frameCount += 1;
     game.objectControl.pushObject();
-    game.objectControl.updateAllPosZero();
-    game.objectControl.updateAllPosOne();
     game.objectControl.updatePowerupStatus();
-    game.player.updatePlayerPosition();
     game.objectControl.increaseDifficulty();
     game.collisionControl.checkInterval();
+    game.player.updatePlayerPosition();
 
     requestAnimationFrame(update);
 }

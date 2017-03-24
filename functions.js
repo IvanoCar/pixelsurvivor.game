@@ -240,6 +240,7 @@ class ExtraControlsHandler {
         Utility.deleteChildrenOnEl("controls_container");
         Utility.generateNewButton("<", "controls_container", "leftButton");
         Utility.generateNewButton(">", "controls_container", "rightButton");
+        //Utility.generateUpButton(0);
 
     }
 
@@ -248,9 +249,16 @@ class ExtraControlsHandler {
         Utility.deleteChildrenOnEl("controls_container");
         Utility.generateNewButton("<", "controls_container", "leftButton");
         Utility.generateNewButton(">", "controls_container", "rightButton");
+        //Utility.generateUpButton(1);                                              //  PROBLEM
     }
 
-    static generateUpButton(mode){}
+    static generateUpButton(mode){
+        if(mode == 0){
+            Utility.generateNewButton("UP", "controls_container", "upButton0")
+        } else {
+            Utility.generateNewButton("UP", "controls_container", "upButton1")
+        }
+    }
 }
 
 

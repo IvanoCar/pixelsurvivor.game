@@ -20,15 +20,6 @@ function getCanvasElement(){
     return canvas;
 }
 
-class Utility {
-    static isBetween(no, a, b){
-        return (no >= a && no <= b);
-    }
-
-    static randInt(a,b) {
-        return Math.floor(Math.random()*(b-a+1)+a);
-    }
-}
 class Resource{}
 Resource.PLAYER_STANDING = "normal.png";
 Resource.PLAYER_JUMPING = "jump.png";
@@ -36,11 +27,18 @@ Resource.CANVAS_NAME = "gamecanvas";
 Resource.CANVAS_CONTEXT = "2d";
 
 class Canvas {
-    constructor(width, height) {
+    constructor() {
         this.canvas = document.getElementById(Resource.CANVAS_NAME);
         this.ctx = this.canvas.getContext(Resource.CANVAS_CONTEXT);
-        this.canvas.height = height;
-        this.canvas.width = width;
+        if(Utility.getScreenWidth() > 800) {
+            this.canvas.width = 800;
+            this.needsTouchControls = false;
+        }
+        else {
+            this.canvas.width = Utility.getScreenWidth() - 10;
+            this.needsTouchControls = true;
+        }
+        this.canvas.height = 350;
     }
 }
 
@@ -145,23 +143,24 @@ class Keys{
 
 class GameController extends Canvas{
     constructor(){
-        super(800, 350);
+        super();
         this.frameCount = 0;
         this.collisionControl = new CollisionHandler(this.canvas.width);
         this.player = new Player(this.canvas, this.ctx);
         this.objectControl = new ObjectGenController();
         this.gameover = false;
-
+        if(this.needsTouchControls)
+            window.onload = GameController.generateAdditionalControls;
     }
 
     keyEventHandler(){
         if (Keys.UP_ARROW || Keys.SPACE) { // up arrow or space
             this.player.jump();
         }
-        if (Keys.RIGHT_ARROW) { // right arrow
+        if (Keys.RIGHT_ARROW) {
             this.player.right();
         }
-        if (Keys.LEFT_ARROW) { // left arrow
+        if (Keys.LEFT_ARROW) {
             this.player.left();
         }
     }
@@ -173,8 +172,75 @@ class GameController extends Canvas{
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    endGame(){}
+    static generateAdditionalControls() {
+
+        Utility.generateNewParagraphElement("Are you left handed or right handed?", "controls_container", "centeredDiv");
+        Utility.generateNewButton("Left", "controls_container", "centeredDiv");
+        Utility.generateNewButton("Right", "controls_container", "centeredDiv");
+
+    }
+
+    endGame(){
+        console.log("Game over.");
+    } // GENERATE TEXT ON CANVAS
 }
+
+class Utility {
+    static isBetween(no, a, b){
+        return (no >= a && no <= b);
+    }
+
+    static randInt(a,b) {
+        return Math.floor(Math.random()*(b-a+1)+a);
+    }
+
+    static getScreenWidth(){
+        return window.innerWidth;
+    }
+
+    static generateNewParagraphElement(text, appendTo, classToApply){
+        var element = document.createElement("P");
+        element.appendChild(document.createTextNode(text));
+        document.getElementById(appendTo).appendChild(element).classList.add(classToApply);
+    }
+
+    static generateNewButton(text, appendTo, classToApply){         // THIS FUNCTION CREATES TWO TYPES OF BUTTONS
+        var button = document.createElement("BUTTON");
+        button.appendChild(document.createTextNode(text));
+        document.getElementById(appendTo).appendChild(button).classList.add(classToApply);
+        if(text == "Left"){
+            button.setAttribute("onclick", "ExtraControlsHandler.generateLeftHandedControls()");
+        } else if (text == "Right"){
+            button.setAttribute("onclick", "ExtraControlsHandler.generateRightHandedControls()");
+        }
+    }
+
+    static deleteChildrenOnEl(name){
+        var parentElement = document.getElementById(name);
+        while (parentElement.hasChildNodes()) {
+            parentElement.removeChild(parentElement.lastChild);
+        }
+    }
+}
+
+
+class ExtraControlsHandler {
+    static generateLeftHandedControls() {
+        console.log("Generate left.");
+        Utility.deleteChildrenOnEl("controls_container");
+    }
+
+    static generateRightHandedControls() {
+        console.log("Generate right.");
+        Utility.deleteChildrenOnEl("controls_container");
+    }
+
+    static generateLeftButton(){}
+    static gemerateRightButton(){}
+    static generateUpButton(){}
+
+}
+
 
 class ObjectGeneration {
     constructor(x, y) {
@@ -256,7 +322,6 @@ class JumpPowerUp extends Powerup{
     constructor(x,y){
         super(x,y);
         this.genPowerUp();
-        this.activationframe = 0;
     }
 
     genPowerUp() {
@@ -405,9 +470,6 @@ class CollisionHandler extends SplitScreen {
             }
         }
     }
-
-
-
     static popExtra(obstaclesArray, mode) {
         if(mode == 0) {
             if (obstaclesArray[1] && obstaclesArray[1].x <= -31)
@@ -417,29 +479,26 @@ class CollisionHandler extends SplitScreen {
                 obstaclesArray.splice(0, 2);
         }
     }
-
-
-
 }
 
 class ScorePowerUp{}
-class ScoreController{}
+class ScoreController {}
 
 
-game = new GameController();
+game = new GameController();        // CREATE SPACE TO BEGIN
 
 function update(){
-    /*if(game.gameover){
+    if(game.gameover){
         game.endGame();
         return;
-    }*/
+    }
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;
     game.objectControl.pushObject();
-    game.objectControl.updatePowerupStatus();
     game.objectControl.increaseDifficulty();
     game.collisionControl.checkInterval();
+    game.objectControl.updatePowerupStatus();
     game.player.updatePlayerPosition();
 
     requestAnimationFrame(update);

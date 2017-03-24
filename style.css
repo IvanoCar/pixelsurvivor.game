@@ -11,6 +11,12 @@ canvas{
     left: 50%;
     transform: translate(-50%, -50%);
 }
+.centeredDiv{
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 body{
     background-color:#585252;
@@ -18,5 +24,12 @@ body{
 
 #game_container{
     width:100%;
-    height: 80%;
+    height: 40%;
+}
+
+#controls_container{
+    display: block;
+    height: 20%;
+    width: 20%;
+    position: relative;
 }

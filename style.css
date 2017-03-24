@@ -34,6 +34,16 @@ body{
     position: relative;
 }
 
-.leftButton{}
-.rightButton{}
-.upButton{}
+.leftButton{
+    /*  ALIGN LEFT*/
+}
+.rightButton{
+    /*  ALIGN RIGHT*/
+}
+.upButton0{
+    /*  ALIGN LEFT*/
+}
+
+.upButton1{
+    /*  ALIGN RIGHT*/
+}

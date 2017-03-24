@@ -175,8 +175,8 @@ class GameController extends Canvas{
     static generateAdditionalControls() {
 
         Utility.generateNewParagraphElement("Are you left handed or right handed?", "controls_container", "centeredDiv");
-        Utility.generateNewButton("Left", "controls_container", "centeredDiv");
-        Utility.generateNewButton("Right", "controls_container", "centeredDiv");
+        Utility.generateNewButton("Left", "controls_container", "buttonStyle");
+        Utility.generateNewButton("Right", "controls_container", "buttonStyle");
 
     }
 
@@ -204,14 +204,24 @@ class Utility {
         document.getElementById(appendTo).appendChild(element).classList.add(classToApply);
     }
 
-    static generateNewButton(text, appendTo, classToApply){         // THIS FUNCTION CREATES TWO TYPES OF BUTTONS
+    static generateNewButton(text, appendTo, classToApply) {
         var button = document.createElement("BUTTON");
         button.appendChild(document.createTextNode(text));
         document.getElementById(appendTo).appendChild(button).classList.add(classToApply);
-        if(text == "Left"){
-            button.setAttribute("onclick", "ExtraControlsHandler.generateLeftHandedControls()");
-        } else if (text == "Right"){
-            button.setAttribute("onclick", "ExtraControlsHandler.generateRightHandedControls()");
+
+        switch(text){
+            case "Left":
+                button.setAttribute("onclick", "ExtraControlsHandler.generateLeftHandedControls()");
+                break;
+            case "Right":
+                button.setAttribute("onclick", "ExtraControlsHandler.generateRightHandedControls()");
+                break;
+            case "<":
+                button.setAttribute("onclick", "game.player.left()");
+                break;
+            case ">":
+                button.setAttribute("onclick", "game.player.right()");
+                break;
         }
     }
 
@@ -228,17 +238,19 @@ class ExtraControlsHandler {
     static generateLeftHandedControls() {
         console.log("Generate left.");
         Utility.deleteChildrenOnEl("controls_container");
+        Utility.generateNewButton("<", "controls_container", "leftButton");
+        Utility.generateNewButton(">", "controls_container", "rightButton");
+
     }
 
     static generateRightHandedControls() {
         console.log("Generate right.");
         Utility.deleteChildrenOnEl("controls_container");
+        Utility.generateNewButton("<", "controls_container", "leftButton");
+        Utility.generateNewButton(">", "controls_container", "rightButton");
     }
 
-    static generateLeftButton(){}
-    static gemerateRightButton(){}
-    static generateUpButton(){}
-
+    static generateUpButton(mode){}
 }
 
 

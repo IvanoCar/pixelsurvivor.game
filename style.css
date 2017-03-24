@@ -30,20 +30,33 @@ body{
 #controls_container{
     display: block;
     height: 20%;
-    width: 20%;
+    width: 100%;
     position: relative;
 }
 
 .leftButton{
     /*  ALIGN LEFT*/
+    float: left;
 }
 .rightButton{
     /*  ALIGN RIGHT*/
+    float: right;
 }
 .upButton0{
     /*  ALIGN LEFT*/
+    float: left;
 }
 
 .upButton1{
+    float: right;
     /*  ALIGN RIGHT*/
+}
+button{
+    width: 60px;
+    height: 30px;
+}
+
+.buttonStyle{
+    font-size: 16px;
+    font-weight: 400;
 }

@@ -217,10 +217,13 @@ class Utility {
                 button.setAttribute("onclick", "ExtraControlsHandler.generateRightHandedControls()");
                 break;
             case "<":
-                button.setAttribute("onclick", "game.player.left()");
+                button.setAttribute("onclick", "game.player.left()");                                   // OPTIMIZE
                 break;
             case ">":
                 button.setAttribute("onclick", "game.player.right()");
+                break;
+            case "UP":
+                button.setAttribute("onclick", "game.player.jump()");
                 break;
         }
     }
@@ -240,7 +243,7 @@ class ExtraControlsHandler {
         Utility.deleteChildrenOnEl("controls_container");
         Utility.generateNewButton("<", "controls_container", "leftButton");
         Utility.generateNewButton(">", "controls_container", "rightButton");
-        //Utility.generateUpButton(0);
+        ExtraControlsHandler.generateUpButton(0);
 
     }
 
@@ -249,14 +252,14 @@ class ExtraControlsHandler {
         Utility.deleteChildrenOnEl("controls_container");
         Utility.generateNewButton("<", "controls_container", "leftButton");
         Utility.generateNewButton(">", "controls_container", "rightButton");
-        //Utility.generateUpButton(1);                                              //  PROBLEM
+        ExtraControlsHandler.generateUpButton(1);
     }
 
     static generateUpButton(mode){
         if(mode == 0){
-            Utility.generateNewButton("UP", "controls_container", "upButton0")
+            Utility.generateNewButton("UP", "controls_container", "upButton0");
         } else {
-            Utility.generateNewButton("UP", "controls_container", "upButton1")
+            Utility.generateNewButton("UP", "controls_container", "upButton1");
         }
     }
 }

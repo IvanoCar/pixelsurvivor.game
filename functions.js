@@ -42,8 +42,35 @@ class Canvas {
     }
 }
 
-class Player{
+class PlayerController {
+
+    jump(){
+        if(!this.jumping) {
+            this.jumping = true;
+            this.velY = - this.speed*2;
+        } else if (this.jumpingPowerUp){
+            this.jumping = true;
+            this.velY = - this.speed*2;
+        }
+    }
+
+    right(){
+        if (this.velX < this.speed) {
+            this.velX++;
+        }
+    }
+
+    left(){
+        if (this.velX > - this.speed) {
+            this.velX--;
+        }
+    }
+}
+
+
+class Player extends PlayerController {
     constructor(canvas, ctx) {
+        super();
         this.canvas = canvas;
         this.ctx = ctx;
         this.setupPlayerModel();
@@ -108,28 +135,8 @@ class Player{
         }
     }
 
-    jump(){
-        if(!this.jumping) {
-            this.jumping = true;
-            this.velY = - this.speed*2;
-       } else if (this.jumpingPowerUp){
-            this.jumping = true;
-            this.velY = - this.speed*2;
-        }
-    }
-
-    right(){
-        if (this.velX < this.speed) {
-            this.velX++;
-        }
-    }
-
-    left(){
-        if (this.velX > - this.speed) {
-            this.velX--;
-        }
-    }
 }
+
 
 class Keys{
     static update(){
@@ -146,7 +153,7 @@ class GameController extends Canvas{
         super();
         this.frameCount = 0;
         this.collisionControl = new CollisionHandler(this.canvas.width);
-        this.player = new Player(this.canvas, this.ctx);
+        this.player = new Player(this.canvas, this.ctx);                                    // solve this
         this.objectControl = new ObjectGenController();
         this.gameover = false;
         if(this.needsTouchControls)
@@ -217,13 +224,13 @@ class Utility {
                 button.setAttribute("onclick", "ExtraControlsHandler.generateRightHandedControls()");
                 break;
             case "<":
-                button.setAttribute("onclick", "game.player.left()");                                   // OPTIMIZE
+                button.setAttribute("onclick", "window.game.player.left()");                                   // OPTIMIZE
                 break;
             case ">":
-                button.setAttribute("onclick", "game.player.right()");
+                button.setAttribute("onclick", "window.game.player.right()");
                 break;
             case "UP":
-                button.setAttribute("onclick", "game.player.jump()");
+                button.setAttribute("onclick", "window.game.player.jump()");
                 break;
         }
     }
@@ -368,7 +375,7 @@ class JumpPowerUp extends Powerup{
 
 
 class ObjectGenController {
-    constructor(){
+    constructor() {
         this.obstaclesZero = [];
         this.obstaclesOne = [];
         this.powerups = [];
@@ -446,7 +453,7 @@ class SplitScreen {
 class CollisionHandler extends SplitScreen {
     constructor(screenWidth) {
         super(screenWidth, 20);
-        this.intervalsArray = this.getArray(); // split leftright side.
+        this.intervalsArray = this.getArray();                                                 // split leftright side.
     }
 
     static checkCollisionOnTwoObjects(object1, object2) {
@@ -504,17 +511,17 @@ class CollisionHandler extends SplitScreen {
     }
 }
 
-class ScorePowerUp{}
+class ScorePowerUp {}
 class ScoreController {}
 
 
 game = new GameController();        // CREATE SPACE TO BEGIN
 
 function update(){
-    if(game.gameover){
+    /*if(game.gameover){
         game.endGame();
         return;
-    }
+    }*/
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;

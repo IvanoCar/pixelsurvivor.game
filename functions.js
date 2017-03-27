@@ -155,6 +155,7 @@ class GameController extends Canvas{
         this.collisionControl = new CollisionHandler(this.canvas.width);
         this.player = new Player(this.canvas, this.ctx);                                    // solve this
         this.objectControl = new ObjectGenController();
+        this.score = new ScoreController();
         this.gameover = false;
         if(this.needsTouchControls)
             window.onload = GameController.generateAdditionalControls;
@@ -271,7 +272,6 @@ class ExtraControlsHandler {
     }
 }
 
-
 class ObjectGeneration {
     constructor(x, y) {
         this.x = x;
@@ -309,7 +309,7 @@ class ObstacleTypeZero extends Obstacle{
 }
 
 class ObstacleTypeOne extends Obstacle{
-    constructor(x,y){
+    constructor(x,y) {
         super(x,y);
         this.obstacleSetup();
         this.genObstacle()
@@ -359,10 +359,10 @@ class JumpPowerUp extends Powerup{
         this.ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
-    static activateJumpPowerup(){ // on collision with powerup object  |  CHANGE PLAYER APPEREANCE + duration
+    activate(){ // on collision with powerup object  |  CHANGE PLAYER APPEREANCE + duration
         game.player.speed = 3.5;
         game.player.jumpingPowerUp = true;
-        JumpPowerUp.activationframe = game.frameCount;
+        setTimeout(JumpPowerUp.deactivateJumpPowerup, 4000);
         console.log("Jump activated.");
     }
 
@@ -373,19 +373,48 @@ class JumpPowerUp extends Powerup{
     }
 }
 
+class ScorePowerUp extends Powerup {
+    constructor(x,y){
+        super(x,y);
+        this.genPowerUp();
+
+    }
+    genPowerUp(){
+        this.ctx.fillStyle = "red";
+        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    activate() {
+        game.score.value += 5;
+    }
+}
+
+class ScoreController {
+    constructor(){
+        this.value = 0;
+    }
+
+    updateScore(){
+        if(game.isCondEveryInterval(30)) {
+            this.value += 0.5;                                                     // set score text, invert game after
+            console.log(this.value);                                               // frame, check FPS- 60?
+        }
+    }
+}
+
 
 class ObjectGenController {
     constructor() {
         this.obstaclesZero = [];
         this.obstaclesOne = [];
-        this.powerups = [];
+        this.powerups = [];                                                         // don't use array
         this.canvas = getCanvasElement();
         this.x = this.canvas.width;
         this.y = this.canvas.height;
         this.speedIncreaseCoef = 1;
         this.intervalOne = 150;
         this.intervalTwo = 200;
-        this.intervalCap = 90;
+        this.intervalCap = 85;
 
 
     }
@@ -399,12 +428,18 @@ class ObjectGenController {
         if (game.isCondEveryInterval(1002)){
             this.powerups[0] = (new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
         }
+        if (game.isCondEveryInterval(1200)){
+            this.powerups[1] = (new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
+        }
 
     }
 
     updatePowerupStatus(){
-        if(!(this.powerups.length == 0)) {
+        if((this.powerups[0])) {
             this.powerups[0].keepActive();
+        }
+        if(this.powerups[1]){
+            this.powerups[1].keepActive(600);
         }
 
     }
@@ -454,6 +489,13 @@ class CollisionHandler extends SplitScreen {
     constructor(screenWidth) {
         super(screenWidth, 20);
         this.intervalsArray = this.getArray();                                                 // split leftright side.
+
+        /*
+        * this.intervalsArray = undefined;
+        * this.inervalsRight = this.getArray();
+        * this.inervalsLeft = SPLIT
+        *
+        * */
     }
 
     static checkCollisionOnTwoObjects(object1, object2) {
@@ -462,6 +504,13 @@ class CollisionHandler extends SplitScreen {
     }
 
     checkInterval() {
+        /*
+        * if(game.player.x <= half)
+        *   this.inervalsArray = this.intervalsLeft;
+        * else
+        *   this.intervalsArray = this.intervalsRight;
+        * */
+
         for (var i = 0; i < this.intervalsArray.length - 1; i++) { // && skip frames
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
                 this.loopObstacles(game.objectControl.obstaclesZero, 2, i);
@@ -487,16 +536,20 @@ class CollisionHandler extends SplitScreen {
         }
     }
 
-    loopPowerUps(powerupArray, i) {
+    loopPowerUps(powerupArray, i) {                                                                         // dnt loop
         for (var j = 0; j < powerupArray.length; j+=1) {
-            if(Utility.isBetween(powerupArray[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
-                if(CollisionHandler.checkCollisionOnTwoObjects(game.player, powerupArray[j])) {
-                    console.log("Collision with powerup.");
-                    JumpPowerUp.activateJumpPowerup();
-                    powerupArray.splice(j,1);
-                    break;
-                    //endGame();
+            try {
+                if (Utility.isBetween(powerupArray[j].x, this.intervalsArray[i], this.intervalsArray[i + 1])) {
+                    if (CollisionHandler.checkCollisionOnTwoObjects(game.player, powerupArray[j])) {
+                        //console.log("Collision with powerup.");
+                        powerupArray[j].activate();
+                        powerupArray.splice(j, 1);
+                        break;
+                        //endGame();
+                    }
                 }
+            } catch (TypeError){
+                j = 0;
             }
         }
     }
@@ -511,11 +564,9 @@ class CollisionHandler extends SplitScreen {
     }
 }
 
-class ScorePowerUp {}
-class ScoreController {}
 
 
-game = new GameController();        // CREATE SPACE TO BEGIN
+game = new GameController();                                                                   // CREATE SPACE TO BEGIN
 
 function update(){
     /*if(game.gameover){
@@ -530,6 +581,7 @@ function update(){
     game.collisionControl.checkInterval();
     game.objectControl.updatePowerupStatus();
     game.player.updatePlayerPosition();
+    game.score.updateScore();
 
     requestAnimationFrame(update);
 }

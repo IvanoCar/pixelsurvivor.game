@@ -242,6 +242,9 @@ class Utility {
             parentElement.removeChild(parentElement.lastChild);
         }
     }
+
+    static getCanvasElement(){}
+    static getCanvasContext(){}
 }
 
 
@@ -346,6 +349,7 @@ class Powerup extends ObjectGeneration {
         }
     }
     genPowerUp(){}
+    activate(){}
 }
 
 class JumpPowerUp extends Powerup{
@@ -392,14 +396,33 @@ class ScorePowerUp extends Powerup {
 class ScoreController {
     constructor(){
         this.value = 0;
+        this.canvas = getCanvasElement();
+        this.ctx = getCanvasContext();
+        this.generateScore();
+    }
+
+    generateScore(){                                                                //SCORE PROBLEM WRITING
+        this.width = 200;
+        this.height = "Consolas";
+        this.x = this.canvas.width - (this.width/2);
+        this.y = this.canvas.height - 10;
+
+        this.ctx.font = this.width + " " + this.height;
+        this.ctx.fillStyle = "black";
+        this.ctx.fillText(this.text, this.width, this.height);
     }
 
     updateScore(){
         if(game.isCondEveryInterval(30)) {
             this.value += 0.5;                                                     // set score text, invert game after
-            console.log(this.value);                                               // frame, check FPS- 60?
+            this.text = "SCORE : " + this.value;                                               // frame, check FPS- 60?
         }
     }
+
+    writeScore(){
+
+    }
+
 }
 
 
@@ -407,7 +430,7 @@ class ObjectGenController {
     constructor() {
         this.obstaclesZero = [];
         this.obstaclesOne = [];
-        this.powerups = [];                                                         // don't use array
+        this.powerups = [];
         this.canvas = getCanvasElement();
         this.x = this.canvas.width;
         this.y = this.canvas.height;

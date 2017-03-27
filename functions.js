@@ -415,7 +415,7 @@ class ScoreController {
     updateScore(){
         if(game.isCondEveryInterval(30)) {
             this.value += 0.5;                                                     // set score text, invert game after
-            this.text = "SCORE : " + this.value;                                               // frame, check FPS- 60?
+            //this.text = "SCORE : " + this.value;                                               // frame, check FPS- 60?
         }
     }
 

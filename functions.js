@@ -403,7 +403,7 @@ class ScoreController {
 
     generateScore(){                                                                //SCORE PROBLEM WRITING
         this.width = 200;
-        this.height = "Consolas";
+        this.height = 40;
         this.x = this.canvas.width - (this.width/2);
         this.y = this.canvas.height - 10;
 

@@ -113,7 +113,8 @@ class Player extends PlayerController {
     }
 
     updatePlayerPosition(){
-        if (this.ctx == null) return;
+        if (this.ctx == null)
+            return;
         this.velX *= friction;
         this.velY += gravity;
 
@@ -396,32 +397,32 @@ class ScorePowerUp extends Powerup {
 class ScoreController {
     constructor(){
         this.value = 0;
+        this.text = "Score : 0";
         this.canvas = getCanvasElement();
         this.ctx = getCanvasContext();
+
+        this.x = this.canvas.width - 170;
+        this.y = 35;
+
+
+        this.ctx.font = "bold 20px Arial";
         this.generateScore();
     }
 
-    generateScore(){                                                                //SCORE PROBLEM WRITING
-        this.width = 200;
-        this.height = 40;
-        this.x = this.canvas.width - (this.width/2);
-        this.y = this.canvas.height - 10;
-
-        this.ctx.font = this.width + " " + this.height;
+    generateScore() {
         this.ctx.fillStyle = "black";
-        this.ctx.fillText(this.text, this.width, this.height);
+        this.ctx.fillText(this.text, this.x, this.y);
     }
 
     updateScore(){
-        if(game.isCondEveryInterval(30)) {
-            this.value += 0.5;                                                     // set score text, invert game after
-            //this.text = "SCORE : " + this.value;                                               // frame, check FPS- 60?
+        this.generateScore();
+        if(game.isCondEveryInterval(15)) {
+            this.value += 0.25;                                                     // set score text, invert game after
+            this.text = "SCORE : " + this.value;                                               // frame, check FPS- 60?
         }
     }
 
-    writeScore(){
-
-    }
+    writeScore(){}
 
 }
 
@@ -439,14 +440,16 @@ class ObjectGenController {
         this.intervalTwo = 200;
         this.intervalCap = 85;
 
+        this.genY = [this.y - 150, this.y - 350];
+
 
     }
     pushObject(){
         if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){
-            this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.y - 150))
+            this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.genY[0]));
         }
         if (game.isCondEveryInterval(this.intervalTwo)){
-            this.obstaclesOne.push(new ObstacleTypeOne(-35, this.y - 350));
+            this.obstaclesOne.push(new ObstacleTypeOne(-35, this.genY[1]));
         }
         if (game.isCondEveryInterval(1002)){
             this.powerups[0] = (new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
@@ -454,6 +457,16 @@ class ObjectGenController {
         if (game.isCondEveryInterval(1200)){
             this.powerups[1] = (new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
         }
+        if(game.isCondEveryInterval(2500)){
+            this.swapY();
+        }
+
+    }
+
+    swapY(){
+        var zeroEl = this.genY[0];
+        this.genY[0] = this.genY[1];
+        this.genY[1] = zeroEl;
 
     }
 

@@ -12,6 +12,7 @@ canvas{
     transform: translate(-50%, -50%);
 }
 .centeredDiv{
+    /* P ELEMENT*/
     width: 100%;
     text-align: center;
     margin-left: auto;

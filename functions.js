@@ -191,6 +191,7 @@ class GameController extends Canvas{
 
     endGame(){
         console.log("Game over.");
+        var gameover = new GameOver();
     } // GENERATE TEXT ON CANVAS
 }
 
@@ -299,7 +300,7 @@ class ObstacleTypeZero extends Obstacle{
     }
     obstacleSetup() {
         this.width = 45;
-        this.height = 150;
+        this.height = 200;
     }
 
     genObstacle() {
@@ -394,36 +395,57 @@ class ScorePowerUp extends Powerup {
     }
 }
 
-class ScoreController {
+class CanvasWriter {
     constructor(){
-        this.value = 0;
-        this.text = "Score : 0";
-        this.canvas = getCanvasElement();
+        this.canvas = getCanvasElement();                                                   // solve
         this.ctx = getCanvasContext();
-
-        this.x = this.canvas.width - 170;
-        this.y = 35;
-
-
-        this.ctx.font = "bold 20px Arial";
-        this.generateScore();
     }
 
-    generateScore() {
-        this.ctx.fillStyle = "black";
+    write(color="black"){
+        this.ctx.fillStyle = color;
         this.ctx.fillText(this.text, this.x, this.y);
     }
 
+    setup(){}
+}
+
+class ScoreController extends CanvasWriter {
+    constructor(){
+        super();
+        this.setup();
+        this.write();
+    }
+
+    setup(){
+        this.value = 0;
+        this.text = "Score : 0";
+        this.x = this.canvas.width - 170;
+        this.y = 35;
+        this.ctx.font = "bold 20px Arial";
+    }
+
     updateScore(){
-        this.generateScore();
+        this.write();
         if(game.isCondEveryInterval(15)) {
             this.value += 0.25;                                                     // set score text, invert game after
             this.text = "SCORE : " + this.value;                                               // frame, check FPS- 60?
         }
     }
+}
 
-    writeScore(){}
+class GameOver extends CanvasWriter{
+    constructor(){
+        super();
+        this.setup();
+        this.write();
+    }
 
+    setup(){
+        this.text = "Game Over! You lasted " + game.score.value + " seconds.";
+        this.x = (this.canvas.width / 2)/2;
+        this.y = this.canvas.height / 2;
+        this.ctx.font = "bold 25px Arial";
+    }
 }
 
 
@@ -438,7 +460,7 @@ class ObjectGenController {
         this.speedIncreaseCoef = 1;
         this.intervalOne = 150;
         this.intervalTwo = 200;
-        this.intervalCap = 85;
+        this.intervalCap = 90;
 
         this.genY = [this.y - 150, this.y - 350];
 
@@ -460,14 +482,12 @@ class ObjectGenController {
         if(game.isCondEveryInterval(2500)){
             this.swapY();
         }
-
     }
 
     swapY(){
         var zeroEl = this.genY[0];
         this.genY[0] = this.genY[1];
         this.genY[1] = zeroEl;
-
     }
 
     updatePowerupStatus(){
@@ -488,7 +508,7 @@ class ObjectGenController {
             else
                 this.speedIncreaseCoef = 4.9;
 
-            if(this.intervalOne > this.intervalCap)
+            if(this.intervalOne > this.intervalCap)                                       //SPLIT INTO FUNCTIONS
                 this.intervalOne -= 8;
             else
                 this.intervalOne = this.intervalCap;
@@ -605,10 +625,10 @@ class CollisionHandler extends SplitScreen {
 game = new GameController();                                                                   // CREATE SPACE TO BEGIN
 
 function update(){
-    /*if(game.gameover){
+    if(game.gameover){
         game.endGame();
         return;
-    }*/
+    }
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;

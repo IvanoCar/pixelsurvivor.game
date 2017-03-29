@@ -191,8 +191,12 @@ class GameController extends Canvas{
 
     endGame(){
         console.log("Game over.");
-        var gameover = new GameOver();
-    } // GENERATE TEXT ON CANVAS
+        //var gameover = new GameOver();
+        //game.clearCanvas();
+        Utility.generateNewParagraphElement("Game Over! You lasted " + game.score.value + " seconds.", "game_container", "gameOverText");
+
+
+    }
 }
 
 class Utility {
@@ -433,7 +437,7 @@ class ScoreController extends CanvasWriter {
     }
 }
 
-class GameOver extends CanvasWriter{
+class GameOver extends CanvasWriter {
     constructor(){
         super();
         this.setup();
@@ -479,7 +483,7 @@ class ObjectGenController {
         if (game.isCondEveryInterval(1200)){
             this.powerups[1] = (new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
         }
-        if(game.isCondEveryInterval(2500)){
+        if(game.isCondEveryInterval(2700)){
             this.swapY();
         }
     }
@@ -554,7 +558,7 @@ class CollisionHandler extends SplitScreen {
         * */
     }
 
-    static checkCollisionOnTwoObjects(object1, object2) {
+    static checkCollisionOnTwoObjects(object1, object2) {                                               // IMPRROVE!
         return (object1.x < object2.x + object2.width  && object1.x + object1.width  > object2.x &&
             object1.y < object2.y + object2.height && object1.y + object1.height > object2.y)
     }

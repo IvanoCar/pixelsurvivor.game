@@ -548,7 +548,19 @@ class SplitScreen {
 class CollisionHandler extends SplitScreen {
     constructor(screenWidth) {
         super(screenWidth, 20);
-        this.intervalsArray = this.getArray();                                                 // split leftright side.
+        this.intervalsArray = this.getArray();
+        this.arrayHalf = Math.ceil(this.intervalsArray.length/2);
+        this.half = this.intervalsArray[this.arrayHalf];
+        //console.log(this.intervalsArray[this.intervalsArray.length-1]);
+
+
+        /*console.log(this.intervalsArray);
+        console.log(this.intervalsArray.splice(this.arrayHalf, this.intervalsArray.length-1));
+        console.log(this.intervalsArray.splice(0, this.arrayHalf));*/
+
+
+
+
 
         /*
         * this.intervalsArray = undefined;
@@ -564,14 +576,17 @@ class CollisionHandler extends SplitScreen {
     }
 
     checkInterval() {
-        /*
-        * if(game.player.x <= half)
-        *   this.inervalsArray = this.intervalsLeft;
-        * else
-        *   this.intervalsArray = this.intervalsRight;
-        * */
+        var index, max;
+        if (game.player.x > this.half) {
+            index = this.arrayHalf;
+            max = this.intervalsArray.length - 1;
+        } else {
+            index = 0;
+            max = this.arrayHalf - 1;
+        }
 
-        for (var i = 0; i < this.intervalsArray.length - 1; i++) { // && skip frames
+
+        for (var i = index; i < max; i++) { // && skip frames
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
                 this.loopObstacles(game.objectControl.obstaclesZero, 2, i);
                 this.loopObstacles(game.objectControl.obstaclesOne, 1.25, i);

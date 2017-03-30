@@ -152,14 +152,18 @@ class Keys{
 class GameController extends Canvas{
     constructor(){
         super();
+        this.setupMainGameElements();
+        if(this.needsTouchControls)
+            window.onload = GameController.generateAdditionalControls;
+    }
+
+    setupMainGameElements(){
         this.frameCount = 0;
         this.collisionControl = new CollisionHandler(this.canvas.width);
         this.player = new Player(this.canvas, this.ctx);                                    // solve this
         this.objectControl = new ObjectGenController();
         this.score = new ScoreController();
         this.gameover = false;
-        if(this.needsTouchControls)
-            window.onload = GameController.generateAdditionalControls;
     }
 
     keyEventHandler(){
@@ -191,12 +195,14 @@ class GameController extends Canvas{
 
     endGame(){
         console.log("Game over.");
-        //var gameover = new GameOver();
-        //game.clearCanvas();
-        Utility.generateNewParagraphElement("Game Over! You lasted " + game.score.value + " seconds.", "game_container", "gameOverText");
-
+        GameOver.setGameOverMessage();
+        //this.clearCanvas();
+        this.restart();
 
     }
+
+    restart(){}
+
 }
 
 class Utility {
@@ -239,6 +245,10 @@ class Utility {
             case "UP":
                 button.setAttribute("onclick", "window.game.player.jump()");
                 break;
+            case "RESTART":
+                console.log("Restart button.");
+                break;
+
         }
     }
 
@@ -373,13 +383,13 @@ class JumpPowerUp extends Powerup{
         game.player.speed = 3.5;
         game.player.jumpingPowerUp = true;
         setTimeout(JumpPowerUp.deactivateJumpPowerup, 4000);
-        console.log("Jump activated.");
+        //console.log("Jump activated.");
     }
 
     static deactivateJumpPowerup() {
         game.player.speed = 5.5;
         game.player.jumpingPowerUp = false;
-        console.log("Jump deactivated.");
+        //console.log("Jump deactivated.");
     }
 }
 
@@ -437,19 +447,15 @@ class ScoreController extends CanvasWriter {
     }
 }
 
-class GameOver extends CanvasWriter {
-    constructor(){
-        super();
-        this.setup();
-        this.write();
+class InfoText extends CanvasWriter{}                                               // powerpu activated score + 5seconds
+
+class GameOver {
+
+    static setGameOverMessage(){
+        Utility.generateNewParagraphElement("Game Over! You lasted " + game.score.value + " seconds.", "game_container", "gameOverText");
     }
 
-    setup(){
-        this.text = "Game Over! You lasted " + game.score.value + " seconds.";
-        this.x = (this.canvas.width / 2)/2;
-        this.y = this.canvas.height / 2;
-        this.ctx.font = "bold 25px Arial";
-    }
+    static setHighscore(){}
 }
 
 
@@ -549,25 +555,10 @@ class CollisionHandler extends SplitScreen {
     constructor(screenWidth) {
         super(screenWidth, 20);
         this.intervalsArray = this.getArray();
-        this.arrayHalf = Math.ceil(this.intervalsArray.length/2);
-        this.half = this.intervalsArray[this.arrayHalf];
-        //console.log(this.intervalsArray[this.intervalsArray.length-1]);
-
-
-        /*console.log(this.intervalsArray);
-        console.log(this.intervalsArray.splice(this.arrayHalf, this.intervalsArray.length-1));
-        console.log(this.intervalsArray.splice(0, this.arrayHalf));*/
-
-
-
-
 
         /*
-        * this.intervalsArray = undefined;
-        * this.inervalsRight = this.getArray();
-        * this.inervalsLeft = SPLIT
-        *
-        * */
+        this.arrayHalf = Math.ceil(this.intervalsArray.length/2);
+        this.half = this.intervalsArray[this.arrayHalf];*/
     }
 
     static checkCollisionOnTwoObjects(object1, object2) {                                               // IMPRROVE!
@@ -576,7 +567,7 @@ class CollisionHandler extends SplitScreen {
     }
 
     checkInterval() {
-        var index, max;
+        /*var index, max;
         if (game.player.x > this.half) {
             index = this.arrayHalf;
             max = this.intervalsArray.length - 1;
@@ -584,9 +575,9 @@ class CollisionHandler extends SplitScreen {
             index = 0;
             max = this.arrayHalf - 1;
         }
+         for (var i = index; i < max; i++) {*/
 
-
-        for (var i = index; i < max; i++) { // && skip frames
+        for (var i = 0; i < this.intervalsArray.length; i++) { // && skip frames
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
                 this.loopObstacles(game.objectControl.obstaclesZero, 2, i);
                 this.loopObstacles(game.objectControl.obstaclesOne, 1.25, i);
@@ -620,7 +611,6 @@ class CollisionHandler extends SplitScreen {
                         powerupArray[j].activate();
                         powerupArray.splice(j, 1);
                         break;
-                        //endGame();
                     }
                 }
             } catch (TypeError){

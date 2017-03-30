@@ -201,8 +201,12 @@ class GameController extends Canvas{
 
     }
 
+
     restart(){
+        //this.clearCanvas();
+        this.setupMainGameElements();
         console.log("Restart pressed.");
+
     }
 
 }

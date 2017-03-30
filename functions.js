@@ -196,12 +196,14 @@ class GameController extends Canvas{
     endGame(){
         console.log("Game over.");
         GameOver.setGameOverMessage();
+        Utility.generateNewButton("RESTART", "game_container", "restartButton");
         //this.clearCanvas();
-        this.restart();
 
     }
 
-    restart(){}
+    restart(){
+        console.log("Restart pressed.");
+    }
 
 }
 
@@ -246,7 +248,7 @@ class Utility {
                 button.setAttribute("onclick", "window.game.player.jump()");
                 break;
             case "RESTART":
-                console.log("Restart button.");
+                button.setAttribute("onclick", "window.game.restart()");
                 break;
 
         }
@@ -628,8 +630,6 @@ class CollisionHandler extends SplitScreen {
         }
     }
 }
-
-
 
 game = new GameController();                                                                   // CREATE SPACE TO BEGIN
 

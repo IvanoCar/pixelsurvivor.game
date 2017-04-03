@@ -654,7 +654,6 @@ class Game {
 
     static startGame() {
         game = new GameController();
-        Game.addListeners();
     }
 
     static addListeners() {
@@ -691,7 +690,11 @@ class Game {
 }
 
 
+
+
 Game.startGame();
+Game.addListeners();
+
 
 
 function update(){

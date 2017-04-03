@@ -4,7 +4,7 @@
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-var keys, friction, gravity;
+var keys, friction, gravity, game;
 keys = [];
 friction = 0.8;
 gravity = 0.3;
@@ -28,6 +28,7 @@ Resource.CANVAS_CONTEXT = "2d";
 
 class Canvas {
     constructor() {
+        Utility.generateCanvas();
         this.canvas = document.getElementById(Resource.CANVAS_NAME);
         this.ctx = this.canvas.getContext(Resource.CANVAS_CONTEXT);
         if(Utility.getScreenWidth() > 800) {
@@ -202,11 +203,17 @@ class GameController extends Canvas{
     }
 
 
-    restart(){
+    static restart() {
         //this.clearCanvas();
-        this.setupMainGameElements();
-        console.log("Restart pressed.");
+        //this.setupMainGameElements();
+        //Utility.deleteChildrenOnEl("game_container");                                           // CREATE NEW GAME BUTTON
 
+        console.log("Restart pressed.");
+        //Game.removeListeners();
+        //Game.startGame();
+        location.reload();                                                                       // test other solutons
+        //removeListeners();
+        //Game.startGame();
     }
 
 }
@@ -252,10 +259,17 @@ class Utility {
                 button.setAttribute("onclick", "window.game.player.jump()");
                 break;
             case "RESTART":
-                button.setAttribute("onclick", "window.game.restart()");
+                button.setAttribute("onclick", "GameController.restart()");
                 break;
-
         }
+    }
+
+    static generateCanvas(){
+        var newCanvas = document.createElement("CANVAS");
+        newCanvas.setAttribute("class", "centered");
+        newCanvas.setAttribute("id", "gamecanvas");
+        document.getElementById("game_container").appendChild(newCanvas);
+
     }
 
     static deleteChildrenOnEl(name){
@@ -483,7 +497,7 @@ class ObjectGenController {
 
     }
     pushObject(){
-        if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){
+        if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){                         // add else
             this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.genY[0]));
         }
         if (game.isCondEveryInterval(this.intervalTwo)){
@@ -635,7 +649,50 @@ class CollisionHandler extends SplitScreen {
     }
 }
 
-game = new GameController();                                                                   // CREATE SPACE TO BEGIN
+
+class Game {
+
+    static startGame() {
+        game = new GameController();
+        Game.addListeners();
+    }
+
+    static addListeners() {
+        document.body.addEventListener("keydown", function(e) {
+            keys[e.keyCode] = true;
+            Keys.update();
+        });
+
+        document.body.addEventListener("keyup", function(e) {
+            keys[e.keyCode] = false;
+            Keys.update();
+        });
+
+        window.addEventListener("load",function(){
+            update();
+        });
+    }
+
+    static removeListeners() {
+        document.body.removeEventListener("keydown", function(e) {
+            keys[e.keyCode] = true;
+            Keys.update();
+        });
+
+        document.body.removeEventListener("keyup", function(e) {
+            keys[e.keyCode] = false;
+            Keys.update();
+        });
+
+        window.removeEventListener("load",function(){
+            update();
+        });
+    }
+}
+
+
+Game.startGame();
+
 
 function update(){
     if(game.gameover){
@@ -654,18 +711,3 @@ function update(){
 
     requestAnimationFrame(update);
 }
-
-// ADD LISTENERS
-document.body.addEventListener("keydown", function(e) {
-    keys[e.keyCode] = true;
-    Keys.update();
-});
-
-document.body.addEventListener("keyup", function(e) {
-    keys[e.keyCode] = false;
-    Keys.update();
-});
-
-window.addEventListener("load",function(){
-    update();
-});

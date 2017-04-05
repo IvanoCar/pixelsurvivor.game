@@ -194,28 +194,6 @@ class GameController extends Canvas{
 
     }
 
-    endGame(){
-        console.log("Game over.");
-        GameOver.setGameOverMessage();
-        Utility.generateNewButton("RESTART", "game_container", "restartButton");
-        //this.clearCanvas();
-
-    }
-
-
-    static restart() {
-        //this.clearCanvas();
-        //this.setupMainGameElements();
-        //Utility.deleteChildrenOnEl("game_container");                                           // CREATE NEW GAME BUTTON
-
-        console.log("Restart pressed.");
-        //Game.removeListeners();
-        //Game.startGame();
-        location.reload();                                                                       // test other solutons
-        //removeListeners();
-        //Game.startGame();
-    }
-
 }
 
 class Utility {
@@ -259,7 +237,7 @@ class Utility {
                 button.setAttribute("onclick", "window.game.player.jump()");
                 break;
             case "RESTART":
-                button.setAttribute("onclick", "GameController.restart()");
+                button.setAttribute("onclick", "Game.restart()");
                 break;
         }
     }
@@ -499,17 +477,13 @@ class ObjectGenController {
     pushObject(){
         if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){                         // add else
             this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.genY[0]));
-        }
-        if (game.isCondEveryInterval(this.intervalTwo)){
+        } else if (game.isCondEveryInterval(this.intervalTwo)){
             this.obstaclesOne.push(new ObstacleTypeOne(-35, this.genY[1]));
-        }
-        if (game.isCondEveryInterval(1002)){
+        }else if (game.isCondEveryInterval(1002)){
             this.powerups[0] = (new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
-        }
-        if (game.isCondEveryInterval(1200)){
+        } else if (game.isCondEveryInterval(1200)){
             this.powerups[1] = (new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
-        }
-        if(game.isCondEveryInterval(2700)){
+        } else if(game.isCondEveryInterval(2700)){
             this.swapY();
         }
     }
@@ -649,11 +623,25 @@ class CollisionHandler extends SplitScreen {
     }
 }
 
-
 class Game {
 
     static startGame() {
         game = new GameController();
+    }
+
+    static endGame(){
+        console.log("Game over.");
+        GameOver.setGameOverMessage();
+        Utility.generateNewButton("RESTART", "game_container", "restartButton");
+        //this.clearCanvas();
+
+    }
+
+    static restart() {
+        //console.log("Restart pressed.");
+        Utility.deleteChildrenOnEl("game_container");
+        game = new GameController();
+        update();
     }
 
     static addListeners() {
@@ -683,9 +671,9 @@ class Game {
             Keys.update();
         });
 
-        window.removeEventListener("load",function(){
+        /*window.removeEventListener("load",function(){
             update();
-        });
+        });*/
     }
 }
 
@@ -693,13 +681,12 @@ class Game {
 
 
 Game.startGame();
-Game.addListeners();
-
+Game.addListeners(); // START BUTTON, NEW PAGE HOW TO PLAY AND GO TO GAME  // info writer , highscore
 
 
 function update(){
     if(game.gameover){
-        game.endGame();
+        Game.endGame();
         return;
     }
     game.clearCanvas();

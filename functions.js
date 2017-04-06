@@ -752,9 +752,10 @@ function update(){
     game.objectControl.increaseDifficulty();
     game.collisionControl.checkInterval();
     game.objectControl.updatePowerupStatus();
-    game.info.updateInfo();
     game.player.updatePlayerPosition();
     game.score.updateScore();
+    game.info.updateInfo();
+
 
     requestAnimationFrame(update);
 }

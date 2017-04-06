@@ -55,15 +55,15 @@ class PlayerController {
         }
     }
 
-    right(){
+    right(moveby=1){
         if (this.velX < this.speed) {
-            this.velX++;
+            this.velX+= moveby;
         }
     }
 
-    left(){
+    left(moveby=1){
         if (this.velX > - this.speed) {
-            this.velX--;
+            this.velX-= moveby;
         }
     }
 }
@@ -154,8 +154,7 @@ class GameController extends Canvas{
     constructor(){
         super();
         this.setupMainGameElements();
-        if(this.needsTouchControls)
-            window.onload = GameController.generateAdditionalControls;
+
     }
 
     setupMainGameElements(){
@@ -164,6 +163,7 @@ class GameController extends Canvas{
         this.player = new Player(this.canvas, this.ctx);                                    // solve this
         this.objectControl = new ObjectGenController();
         this.score = new ScoreController();
+        this.info = new InfoText();
         this.gameover = false;
     }
 
@@ -184,14 +184,6 @@ class GameController extends Canvas{
 
     clearCanvas(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    static generateAdditionalControls() {
-
-        Utility.generateNewParagraphElement("Are you left handed or right handed?", "controls_container", "centeredDiv");
-        Utility.generateNewButton("Left", "controls_container", "buttonStyle");
-        Utility.generateNewButton("Right", "controls_container", "buttonStyle");
-
     }
 
 }
@@ -228,16 +220,19 @@ class Utility {
                 button.setAttribute("onclick", "ExtraControlsHandler.generateRightHandedControls()");
                 break;
             case "<":
-                button.setAttribute("onclick", "window.game.player.left()");                                   // OPTIMIZE
+                button.setAttribute("onclick", "window.game.player.left(6)");                                   // OPTIMIZE
                 break;
             case ">":
-                button.setAttribute("onclick", "window.game.player.right()");
+                button.setAttribute("onclick", "window.game.player.right(6)");
                 break;
             case "UP":
                 button.setAttribute("onclick", "window.game.player.jump()");
                 break;
             case "RESTART":
                 button.setAttribute("onclick", "Game.restart()");
+                break;
+            case "START":
+                button.setAttribute("onclick", "Game.startGame()");
                 break;
         }
     }
@@ -270,6 +265,8 @@ class ExtraControlsHandler {
         Utility.generateNewButton(">", "controls_container", "rightButton");
         ExtraControlsHandler.generateUpButton(0);
 
+        update();
+
     }
 
     static generateRightHandedControls() {
@@ -278,6 +275,8 @@ class ExtraControlsHandler {
         Utility.generateNewButton("<", "controls_container", "leftButton");
         Utility.generateNewButton(">", "controls_container", "rightButton");
         ExtraControlsHandler.generateUpButton(1);
+
+        update();
     }
 
     static generateUpButton(mode){
@@ -286,6 +285,14 @@ class ExtraControlsHandler {
         } else {
             Utility.generateNewButton("UP", "controls_container", "upButton1");
         }
+    }
+
+    static generateAdditionalControls() {
+
+        Utility.generateNewParagraphElement("Are you left handed or right handed?", "controls_container", "centeredDiv");
+        Utility.generateNewButton("Left", "controls_container", "buttonStyle");
+        Utility.generateNewButton("Right", "controls_container", "buttonStyle");
+
     }
 }
 
@@ -378,6 +385,7 @@ class JumpPowerUp extends Powerup{
     }
 
     activate(){ // on collision with powerup object  |  CHANGE PLAYER APPEREANCE + duration
+        game.info.jumpPowerupActivatedInfo();
         game.player.speed = 3.5;
         game.player.jumpingPowerUp = true;
         setTimeout(JumpPowerUp.deactivateJumpPowerup, 4000);
@@ -404,6 +412,7 @@ class ScorePowerUp extends Powerup {
 
     activate() {
         game.score.value += 5;
+        game.info.scorePowerupActivatedInfo();
     }
 }
 
@@ -433,10 +442,10 @@ class ScoreController extends CanvasWriter {
         this.text = "Score : 0";
         this.x = this.canvas.width - 170;
         this.y = 35;
-        this.ctx.font = "bold 20px Arial";
     }
 
     updateScore(){
+        this.ctx.font = "bold 20px Arial";
         this.write();
         if(game.isCondEveryInterval(15)) {
             this.value += 0.25;                                                     // set score text, invert game after
@@ -445,7 +454,44 @@ class ScoreController extends CanvasWriter {
     }
 }
 
-class InfoText extends CanvasWriter{}                                               // powerpu activated score + 5seconds
+class InfoText extends CanvasWriter{
+    constructor() {
+        super();
+        this.setup()
+    }
+
+    setup(){
+        this.x = 30;
+        this.y = this.canvas.height - 10;
+    }
+
+    jumpPowerupActivatedInfo(){
+        this.frameJ = game.frameCount;
+        this.text = "JUMP POWERUP ACTIVATED";
+        this.write();
+    }
+
+    scorePowerupActivatedInfo(){
+        this.frameS = game.frameCount;
+        this.text = "SCORE + 5 seconds";
+        this.write();
+    }
+
+    keepVisible(noFrames, frameActivated){
+        if(game.frameCount - frameActivated <= noFrames) {
+            this.ctx.font = "bold 16px Arial";
+            this.write();
+        }
+    }
+
+    updateInfo(){
+        this.keepVisible(150, this.frameJ);
+        this.keepVisible(150, this.frameS);
+    }
+
+}
+
+
 
 class GameOver {
 
@@ -625,8 +671,19 @@ class CollisionHandler extends SplitScreen {
 
 class Game {
 
+    static setup(){
+        Utility.generateNewButton("START", "game_container", "newGameButton");
+        Game.addListeners(); // START BUTTON, NEW PAGE HOW TO PLAY AND GO TO GAME  // info writer , highscore, cookie hoghcore
+    }
+
     static startGame() {
+        Utility.deleteChildrenOnEl("game_container");
         game = new GameController();
+        if(game.needsTouchControls) {
+            ExtraControlsHandler.generateAdditionalControls();
+        } else {
+            update();
+        }
     }
 
     static endGame(){
@@ -679,16 +736,15 @@ class Game {
 
 
 
-
-Game.startGame();
-Game.addListeners(); // START BUTTON, NEW PAGE HOW TO PLAY AND GO TO GAME  // info writer , highscore
+Game.setup();
 
 
 function update(){
-    if(game.gameover){
+    if(!game) return;
+    /*if(game.gameover){
         Game.endGame();
         return;
-    }
+    }*/
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;
@@ -696,6 +752,7 @@ function update(){
     game.objectControl.increaseDifficulty();
     game.collisionControl.checkInterval();
     game.objectControl.updatePowerupStatus();
+    game.info.updateInfo();
     game.player.updatePlayerPosition();
     game.score.updateScore();
 

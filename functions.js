@@ -523,9 +523,9 @@ class GameOver {
     }
 
     static writeHighscore(){
-        Utility.deleteChildrenOnEl("highscore_container");
         if(document.cookie != ""){
-            Utility.generateNewParagraphElement("Your highscore: " + Cookie.get("highscore") + "seconds", "highscore_container", "centeredDiv");
+            Utility.deleteChildrenOnEl("highscore_container");
+            Utility.generateNewParagraphElement("Your highscore: " + Cookie.get("highscore") + " seconds", "highscore_container", "centeredDiv");
         }
     }
 }

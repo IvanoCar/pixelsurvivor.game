@@ -492,6 +492,16 @@ class InfoText extends CanvasWriter{
 }
 
 
+class Cookie {
+    static set(name, value) {
+        document.cookie = name + "=" + value;
+    }
+
+    static get(name) {
+        return parseFloat(document.cookie.replace(name + "=", ""));
+    }
+}
+
 
 class GameOver {
 
@@ -499,7 +509,25 @@ class GameOver {
         Utility.generateNewParagraphElement("Game Over! You lasted " + game.score.value + " seconds.", "game_container", "gameOverText");
     }
 
-    static setHighscore(){}
+    static setHighscore(){
+        if (document.cookie != "") {
+            //console.log(["cookie exists.", document.cookie]);
+            if (Cookie.get("highscore") < game.score.value) {
+                Cookie.set("highscore", game.score.value);
+                //console.log(["cookie changed.", document.cookie]);
+            }
+        } else {
+            Cookie.set("highscore", game.score.value);
+            //console.log(["created cookie", document.cookie, document.cookie.indexOf('highcore=')]);
+        }
+    }
+
+    static writeHighscore(){
+        Utility.deleteChildrenOnEl("highscore_container");
+        if(document.cookie != ""){
+            Utility.generateNewParagraphElement("Your highscore: " + Cookie.get("highscore") + "seconds", "highscore_container", "centeredDiv");
+        }
+    }
 }
 
 
@@ -678,6 +706,7 @@ class Game {
 
     static startGame() {
         Utility.deleteChildrenOnEl("game_container");
+        GameOver.writeHighscore();
         game = new GameController();
         if(game.needsTouchControls) {
             ExtraControlsHandler.generateAdditionalControls();
@@ -689,6 +718,7 @@ class Game {
     static endGame(){
         console.log("Game over.");
         GameOver.setGameOverMessage();
+        GameOver.setHighscore();
         Utility.generateNewButton("RESTART", "game_container", "restartButton");
         //this.clearCanvas();
 
@@ -697,6 +727,8 @@ class Game {
     static restart() {
         //console.log("Restart pressed.");
         Utility.deleteChildrenOnEl("game_container");
+        GameOver.writeHighscore();
+
         game = new GameController();
         update();
     }
@@ -741,10 +773,10 @@ Game.setup();
 
 function update(){
     if(!game) return;
-    /*if(game.gameover){
+    if(game.gameover){
         Game.endGame();
         return;
-    }*/
+    }
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;

@@ -252,6 +252,8 @@ class Utility {
         }
     }
 
+    static generateContainers(){}
+
     static getCanvasElement(){}
     static getCanvasContext(){}
 }
@@ -791,7 +793,6 @@ function update(){
     game.player.updatePlayerPosition();
     game.score.updateScore();
     game.info.updateInfo();
-
 
     requestAnimationFrame(update);
 }

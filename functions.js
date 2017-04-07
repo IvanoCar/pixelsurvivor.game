@@ -356,6 +356,7 @@ class Powerup extends ObjectGeneration {
     constructor(x,y){
         super(x,y);
         this.frame = game.frameCount;
+        this.active = false;
         this.powerupSetup();
 
     }
@@ -365,8 +366,11 @@ class Powerup extends ObjectGeneration {
     }
 
     keepActive(noFrames=400){
-        if(game.frameCount - this.frame <= noFrames) { // && not collided | check for collision with player here
+        if(game.frameCount - this.frame <= noFrames) {
             this.genPowerUp();
+            this.active = true;
+        } else {
+            this.active = false;
         }
     }
     genPowerUp(){}
@@ -674,7 +678,7 @@ class CollisionHandler extends SplitScreen {
         for (var j = 0; j < powerupArray.length; j+=1) {
             try {
                 if (Utility.isBetween(powerupArray[j].x, this.intervalsArray[i], this.intervalsArray[i + 1])) {
-                    if (CollisionHandler.checkCollisionOnTwoObjects(game.player, powerupArray[j])) {
+                    if (CollisionHandler.checkCollisionOnTwoObjects(game.player, powerupArray[j]) && powerupArray[j].active) {
                         //console.log("Collision with powerup.");
                         powerupArray[j].activate();
                         powerupArray.splice(j, 1);
@@ -719,6 +723,8 @@ class Game {
         console.log("Game over.");
         GameOver.setGameOverMessage();
         GameOver.setHighscore();
+        GameOver.writeHighscore();
+
         Utility.generateNewButton("RESTART", "game_container", "restartButton");
         //this.clearCanvas();
 
@@ -727,8 +733,6 @@ class Game {
     static restart() {
         //console.log("Restart pressed.");
         Utility.deleteChildrenOnEl("game_container");
-        GameOver.writeHighscore();
-
         game = new GameController();
         update();
     }

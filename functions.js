@@ -201,6 +201,10 @@ class Utility {
         return window.innerWidth;
     }
 
+    static getScreenHeight(){
+        return window.innerHeight;
+    }
+
     static generateNewParagraphElement(text, appendTo, classToApply){
         var element = document.createElement("P");
         element.appendChild(document.createTextNode(text));

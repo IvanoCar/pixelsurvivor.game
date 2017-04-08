@@ -29,27 +29,36 @@ body{
 }
 
 #controls_container{
+    top: 85%;
     display: block;
-    height: 20%;
+    height: 15%;
     width: 100%;
+    position: fixed;
 }
 
 .leftButton{
     /*  ALIGN LEFT*/
     float: left;
-}
+    display: block;
+    top: 50%;}
 .rightButton{
     /*  ALIGN RIGHT*/
     float: right;
     display: block;
+    top: 50%;
+
 }
 .upButton0{
     /*  ALIGN LEFT*/
     float: left;
+    display: block;
+    top: 50%;
 }
 
 .upButton1{
     float: right;
+    display: block;
+    top: 50%;
     /*  ALIGN RIGHT*/
 }
 button{
@@ -94,4 +103,15 @@ button{
     width: 100%;
     font-size: large;
     font-family: Arial;
+}
+
+header{
+    top: 0;
+    width: 100%;
+}
+
+.headerButtons {
+    width: 200px;
+    height: 30px;
+    display: inline-block;
 }

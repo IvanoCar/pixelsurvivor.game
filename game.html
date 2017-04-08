@@ -6,8 +6,19 @@
     <title>Pixel Runner</title>
 </head>
 
-<body>
+<header>
     <div id="highscore_container"></div>
+<!---
+    <div class="centeredDiv" id="headerbuttons">
+        <button class="headerButtons" onclick="ExtraControlsHandler.generateAdditionalControls()">Give Touch Countrols</button>
+        <button class="headerButtons">Back to main screen</button>
+        <button class="headerButtons" onclick="Utility.deleteChildrenOnEl('controls_container')">Remove Touch Countrols</button>
+    </div>
+--->
+
+</header>
+
+<body>
 
     <div id="game_container" class="centered"></div>
 
@@ -15,4 +26,6 @@
 
     <script src="functions.js" type="text/javascript"></script>
 </body>
+
+
 </html>

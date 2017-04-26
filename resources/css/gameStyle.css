@@ -1,0 +1,219 @@
+canvas{
+    border:2px solid black;
+    margin:auto;
+    display:block;
+    background-color:white;
+}
+
+.centered{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.centeredDiv{
+    /* P ELEMENT*/
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    /*background-color: #212121;*/
+    background-color: #EBF1F7;
+    overflow: hidden;
+}
+
+#game_container{
+    width:100%;
+    height: 50%;
+}
+
+#controls_container{
+    display: block;
+    height: 17%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.switchButton {
+    position: absolute;
+    bottom: 0;
+    left: 45%;
+    width: 3%;
+    min-width: 40px;
+    height: 35px;
+    color: transparent;
+    background: transparent url("../buttons/switch.svg") no-repeat center;
+    border: 2px solid #007DFF;
+    border-radius: 15%;
+    box-shadow: none;
+    outline: none;
+}
+
+.leftButton, .rightButton, .upButton0, .upButton1 {
+    display: inline-block;
+    position: relative;
+    top: 25%;
+    width: 18%;                                                                                 /* OPTIMIZE */
+    height: 75%;
+    color: transparent;
+    border: 4px solid #007DFF;
+    border-radius: 15%;
+    box-shadow: none;
+    outline: none;
+}
+.leftButton{
+    /*  ALIGN LEFT*/
+    float: left;
+    background: transparent url("../buttons/arrow_left1.svg") no-repeat center;
+    background-size: 50%;
+}
+
+.rightButton{
+    /*  ALIGN RIGHT*/
+    float: right;
+    background: transparent url("../buttons/arrow_right1.svg") no-repeat center;
+    background-size: 50%;
+
+}
+.upButton0{
+    /*  ALIGN LEFT*/
+    float: left;
+    top: 10%;
+    background: transparent url("../buttons/arrow_up1.svg") no-repeat center;
+    background-size: 40%;
+
+}
+
+.upButton1{
+    float: right;
+    top: 10%;
+    background: transparent url("../buttons/arrow_up1.svg") no-repeat center;
+    background-size: 40%;
+    /*  ALIGN RIGHT*/
+}
+button{
+    width: 10%;
+    height: 40%;
+}
+
+.buttonStyle{
+    font-size: 14px;
+    font-weight: 400;
+    min-width: 100px;
+
+}
+
+.gameOverText {
+    position: absolute;                                                                         /*CONVERT TO IMAGE + Z INDEX ON HIGHSOCRE*/
+    top: 53%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    text-align: center;
+    font-family: "Arial", serif;
+}
+
+.restartButton {
+    position: absolute;
+    top: 27%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92px;
+    height: 92px;
+    color: transparent;                                                                                    /* FIX RESTART BUTTON, TRY CONTROLS BUTTONS*/
+    border: 2px;
+    box-shadow: none;
+    outline: none;
+    background: transparent url("../buttons/restart_button.svg") no-repeat;
+}
+
+.newGameButton {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 50px;
+}
+
+#highscore_container {
+    color: #007DFF;
+    width: 100%;
+    height: 5%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.highscoreText {
+    text-align: center;
+    font-size: large;
+    font-family: Arial, serif;
+    position: absolute;
+    width:100%;
+    height: 100%;
+    left: 0;
+    top : -7px
+}
+
+#name {
+    width: 100%;
+    height: 20%;
+    position: absolute;
+    left: 0;
+}
+
+header{
+    top: 0;
+    width: 100%;
+    height: 25%;
+}
+
+#extrabuttons {
+    position: absolute;
+    top:50%;
+    z-index: 10000;
+}
+
+.addButton, .removeButton {
+    font-size: 1px;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    color:transparent;
+    border: 2px;
+    box-shadow: none;
+    background-color: transparent;
+    outline: none;
+}
+
+.addButton {
+    background-image: url("../buttons/touch_controls.svg");
+}
+
+.removeButton {
+    background-image: url("../buttons/remove_touch.svg");
+}
+
+
+/*
+#game_over_wrapper {
+    width: 100%;
+    height: 50%;
+}
+
+#restart_container {
+    width: 100%;
+    height: 50%;
+}
+
+#game_over_container {
+    width: 100%;
+    height: 50%;
+}*/

@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/gameStyle.css">
     <meta charset="UTF-8">
-    <title>Pixel Runner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+
+    <title>Pixel Survivor</title>
 </head>
 
-<header>
-    <div id="highscore_container"></div>
-<!---
-    <div class="centeredDiv" id="headerbuttons">
-        <button class="headerButtons" onclick="ExtraControlsHandler.generateAdditionalControls()">Give Touch Countrols</button>
-        <button class="headerButtons">Back to main screen</button>
-        <button class="headerButtons" onclick="Utility.deleteChildrenOnEl('controls_container')">Remove Touch Countrols</button>
-    </div>
---->
 
-</header>
 
 <body>
 
+    <header>
+        <img src="resources/images/page_res/game_name.svg" id="name">
+        <div id="highscore_container"></div>
+    </header>
+
+    <div id="extrabuttons"></div>
+
+
     <div id="game_container" class="centered"></div>
-
+<!---
+    <div id="game_over_wrapper" class="centered">
+        <div id="restart_container"></div>
+        <div id="game_over_container"></div>
+    </div>
+--->
     <div id="controls_container" class="centeredDiv"></div>
+    <script src="resources/scripts/functions.js" type="text/javascript"></script>
 
-    <script src="functions.js" type="text/javascript"></script>
+
 </body>
 
 

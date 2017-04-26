@@ -73,10 +73,10 @@ class PlayerController {
 
 
 class Player extends PlayerController {
-    constructor(canvas, ctx) {
+    constructor(canvas) {
         super();
         this.canvas = canvas;
-        this.ctx = ctx;
+        this.ctx = canvas.getContext(Resource.CANVAS_CONTEXT);
         this.setupPlayerModel();
         this.defaultValues();
     }
@@ -162,8 +162,8 @@ class GameController extends Canvas{
     setupMainGameElements(){
         this.frameCount = 0;
         this.collisionControl = new CollisionHandler();
-        this.player = new Player(this.canvas, this.ctx);                                    // solve this
-        this.objectControl = new ObjectGenController();
+        this.player = new Player(this.canvas);                                    // solve this
+        this.objectControl = new ObjectGenController(this.canvas);
         this.score = new ScoreController();
         this.info = new InfoText();
         this.gameover = false;
@@ -277,14 +277,8 @@ class Utility {
 
     static generateContainers(){}                                                                   // finish functions
 
-    static getCanvasElement(){
-        var canvas = document.getElementById(Resource.CANVAS_NAME);
-        return canvas;
-    }
     static getCanvasContext(){
-        var canvas = document.getElementById(Resource.CANVAS_NAME);
-        var ctx = canvas.getContext(Resource.CANVAS_CONTEXT);
-        return ctx;
+        return document.getElementById(Resource.CANVAS_NAME).getContext(Resource.CANVAS_CONTEXT);
     }
 }
 
@@ -362,7 +356,7 @@ class ExtraControlsHandler {
 }
 
 class ObjectGeneration {
-    constructor(x, y) {
+    constructor(x, y, canvasContext) {
         this.x = x;
         this.y = y;
         this.ctx = Utility.getCanvasContext();
@@ -487,9 +481,9 @@ class ScorePowerUp extends Powerup {
 }
 
 class CanvasWriter {
-    constructor(){
-        this.canvas = Utility.getCanvasElement();                                                               // solve
-        this.ctx = Utility.getCanvasContext();
+    constructor(canvas){
+        this.canvas = canvas;                                                               // solve
+        this.ctx = canvas.getContext(Resource.CANVAS_CONTEXT);
     }
 
     write(color="black"){
@@ -602,11 +596,11 @@ class GameOver {
 
 
 class ObjectGenController {
-    constructor() {
+    constructor(canvas) {
         this.obstaclesZero = [];
         this.obstaclesOne = [];
         this.powerups = [];
-        this.canvas = Utility.getCanvasElement();
+        this.canvas = canvas;
         this.x = this.canvas.width;
         this.y = this.canvas.height;
         this.speedIncreaseCoef = 1;

@@ -13,12 +13,14 @@ gravity = 0.3;
 class Resource{}
 Resource.PLAYER_STANDING = "resources/images/player/normal.png";
 Resource.PLAYER_JUMPING = "resources/images/player/jump.png";
+Resource.PLAYER_NORMAL_P = "resources/images/player/normal_jp.png";
+Resource.PLAYER_JUMPING_P = "resources/images/player/jump_jp.png";
 Resource.CANVAS_NAME = "gamecanvas";
 Resource.CANVAS_CONTEXT = "2d";
 Resource.OBSTACLE0_IMAGE = "resources/images/obstacles/type0.svg";
 Resource.OBSTACLE1_IMAGE = "resources/images/obstacles/type1.svg";
 Resource.JUMP_POWERUP = "resources/images/powerups/jumpPowerup.png";
-//Resource.JUMP_POWERUP = "resources/images/powerups/jumpPowerup.png";
+Resource.SCORE_POWERUP = "resources/images/powerups/scorePowerup.png";
 
 
 class Canvas {
@@ -96,7 +98,7 @@ class Player extends PlayerController {
         this.x = (this.canvas.width/2)/2;
         this.width = 30;
         this.height = 30;
-        this.speed = 5.5;
+        this.speed = 5.7;
         this.velX = 0;
         this.velY = 0;
         this.jumping = false;
@@ -135,16 +137,11 @@ class Player extends PlayerController {
         }
 
         if(!this.jumping) {
-            this.ctx.drawImage(this.im_model, this.x, this.y);
+            this.ctx.drawImage(this.im_model, this.x, this.y, this.width, this.height);
         } else {
-            if(this.jumpingPowerUp) {
-                this.ctx.drawImage(this.im_model, this.x, this.y);                                        // NEW MODEL JUMP
-            } else {
-                this.ctx.drawImage(this.im_jump, this.x, this.y);
-            }
+            this.ctx.drawImage(this.im_jump, this.x, this.y, this.width, this.height);
         }
     }
-
 }
 
 
@@ -196,6 +193,7 @@ class GameController extends Canvas{
 }
 
 class Utility {
+
     static isBetween(no, a, b){
         return (no >= a && no <= b);
     }
@@ -369,7 +367,6 @@ class ObjectGeneration {
 class Obstacle extends ObjectGeneration {
     constructor(x,y){
         super(x,y);
-
     }
     updateObstaclePosition(speed=1){}
 }
@@ -432,8 +429,8 @@ class Powerup extends ObjectGeneration {
 
     }
     powerupSetup() {
-        this.width = 25;
-        this.height = 25;
+        this.width = 30;
+        this.height = 30;
     }
 
     keepActive(noFrames=400){
@@ -451,23 +448,30 @@ class Powerup extends ObjectGeneration {
 class JumpPowerUp extends Powerup{
     constructor(x,y){
         super(x,y);
+        this.jp = new Image();
+        this.jp.src = Resource.JUMP_POWERUP;
         this.genPowerUp();
     }
 
     genPowerUp() {
-        this.ctx.fillStyle = "green";
-        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        /*this.ctx.fillStyle = "green";
+        this.ctx.fillRect(this.x, this.y, this.width, this.height);*/
+        this.ctx.drawImage(this.jp, this.x, this.y, this.width, this.height);
     }
 
     activate(){                             // on collision with powerup object  |  CHANGE PLAYER APPEREANCE + duration 4 s jump powerup
         game.info.jumpPowerupActivatedInfo();
-        game.player.speed = 4;
+        game.player.im_model.src = Resource.PLAYER_NORMAL_P;
+        game.player.im_jump.src = Resource.PLAYER_JUMPING_P;
+        game.player.speed = 4.2;
         game.player.jumpingPowerUp = true;
         setTimeout(JumpPowerUp.deactivateJumpPowerup, 4000);
     }
 
     static deactivateJumpPowerup() {
-        game.player.speed = 5.5;
+        game.player.im_model.src = Resource.PLAYER_STANDING;
+        game.player.im_jump.src = Resource.PLAYER_JUMPING;
+        game.player.speed = 5.7;
         game.player.jumpingPowerUp = false;
     }
 }
@@ -475,12 +479,15 @@ class JumpPowerUp extends Powerup{
 class ScorePowerUp extends Powerup {
     constructor(x,y){
         super(x,y);
+        this.scp = new Image();
+        this.scp.src = Resource.SCORE_POWERUP;
         this.genPowerUp();
 
     }
     genPowerUp(){
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        /*this.ctx.fillStyle = "red";
+        this.ctx.fillRect(this.x, this.y, this.width, this.height);*/
+        this.ctx.drawImage(this.scp, this.x, this.y, this.width, this.height);
     }
 
     activate() {
@@ -614,7 +621,7 @@ class ObjectGenController {
         this.intervalTwo = 200;
         this.intervalCap = 90;
 
-        this.genY = [this.y - 150, this.y - 350];
+        this.genY = [this.y - 162, this.y - 362];
 
     }
 
@@ -842,7 +849,6 @@ class Game {
 
 
 Game.setup();
-
 
 function update(){
     if(!game) return;

@@ -1,60 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 25 200" style="enable-background:new 0 0 25 200;" xml:space="preserve">
+	 viewBox="0 -88 25 200" style="enable-background:new 0 -88 25 200;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#60B2FC;stroke:#231F20;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st1{fill:#60B2FC;stroke:#231F20;stroke-width:0.4;stroke-miterlimit:10;}
-	.st2{fill:#60B2FC;}
+	.st1{fill:none;stroke:#231F20;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{fill:#60B2FC;stroke:#231F20;stroke-width:0.4;stroke-miterlimit:10;}
+	.st3{fill:none;stroke:#231F20;stroke-width:0.4;stroke-miterlimit:10;}
+	.st4{fill:#60B2FC;}
 </style>
 <g id="XMLID_45_">
-	<rect id="XMLID_20_" x="0.2" class="st0" width="24.9" height="3.5"/>
-	<rect id="XMLID_19_" x="2.1" y="3.5" class="st0" width="21" height="3.3"/>
-	<polyline id="XMLID_17_" class="st0" points="5.2,29.1 5.2,6.8 20.1,6.8 20.1,29.1 	"/>
+	<rect id="XMLID_20_" x="0.2" y="-88" class="st0" width="24.9" height="3.5"/>
+	<rect id="XMLID_19_" x="2.1" y="-84.5" class="st0" width="21" height="3.3"/>
+	<polyline id="XMLID_17_" class="st0" points="5.2,-58.9 5.2,-81.2 20.1,-81.2 20.1,-58.9 	"/>
 	<g id="XMLID_46_">
 		<g id="XMLID_47_">
-			<line id="XMLID_16_" class="st0" x1="9.4" y1="9" x2="9.4" y2="29.1"/>
-			<line id="XMLID_15_" class="st0" x1="7.5" y1="29.1" x2="7.5" y2="9"/>
-			<line id="XMLID_14_" class="st0" x1="13.6" y1="9" x2="13.6" y2="29.1"/>
-			<line id="XMLID_13_" class="st0" x1="11.7" y1="29.1" x2="11.7" y2="9"/>
-			<line id="XMLID_12_" class="st0" x1="17.8" y1="9" x2="17.8" y2="29.1"/>
-			<line id="XMLID_11_" class="st0" x1="15.9" y1="29.1" x2="15.9" y2="9"/>
+			<line id="XMLID_16_" class="st1" x1="9.4" y1="-79" x2="9.4" y2="-58.9"/>
+			<line id="XMLID_15_" class="st1" x1="7.5" y1="-58.9" x2="7.5" y2="-79"/>
+			<line id="XMLID_14_" class="st1" x1="13.6" y1="-79" x2="13.6" y2="-58.9"/>
+			<line id="XMLID_13_" class="st1" x1="11.7" y1="-58.9" x2="11.7" y2="-79"/>
+			<line id="XMLID_12_" class="st1" x1="17.8" y1="-79" x2="17.8" y2="-58.9"/>
+			<line id="XMLID_11_" class="st1" x1="15.9" y1="-58.9" x2="15.9" y2="-79"/>
 		</g>
 	</g>
 </g>
 <g id="XMLID_31_">
 	<g id="XMLID_40_">
-		<rect id="XMLID_10_" x="0.2" y="196.9" class="st1" width="24.9" height="3.1"/>
-		<rect id="XMLID_9_" x="2.1" y="194.1" class="st1" width="21" height="2.9"/>
-		<polyline id="XMLID_7_" class="st1" points="5.2,174.7 5.2,194.1 20.1,194.1 20.1,174.7 		"/>
+		<rect id="XMLID_10_" x="0.2" y="108.9" class="st2" width="24.9" height="3.1"/>
+		<rect id="XMLID_9_" x="2.1" y="106.3" class="st2" width="21" height="2.6"/>
+		<polyline id="XMLID_7_" class="st2" points="5.2,86.7 5.2,106.1 20.1,106.1 20.1,86.7 		"/>
 	</g>
 	<g id="XMLID_32_">
 		<g id="XMLID_33_">
-			<line id="XMLID_6_" class="st1" x1="9.4" y1="191.1" x2="9.4" y2="174.7"/>
-			<line id="XMLID_5_" class="st1" x1="7.5" y1="174.7" x2="7.5" y2="191.1"/>
-			<line id="XMLID_4_" class="st1" x1="13.6" y1="191.1" x2="13.6" y2="174.7"/>
-			<line id="XMLID_3_" class="st1" x1="11.7" y1="174.7" x2="11.7" y2="191.1"/>
-			<line id="XMLID_2_" class="st1" x1="17.8" y1="191.1" x2="17.8" y2="174.7"/>
-			<line id="XMLID_1_" class="st1" x1="15.9" y1="174.7" x2="15.9" y2="191.1"/>
+			<line id="XMLID_6_" class="st3" x1="9.4" y1="103.1" x2="9.4" y2="86.7"/>
+			<line id="XMLID_5_" class="st3" x1="7.5" y1="86.7" x2="7.5" y2="103.1"/>
+			<line id="XMLID_4_" class="st3" x1="13.6" y1="103.1" x2="13.6" y2="86.7"/>
+			<line id="XMLID_3_" class="st3" x1="11.7" y1="86.7" x2="11.7" y2="103.1"/>
+			<line id="XMLID_2_" class="st3" x1="17.8" y1="103.1" x2="17.8" y2="86.7"/>
+			<line id="XMLID_1_" class="st3" x1="15.9" y1="86.7" x2="15.9" y2="103.1"/>
 		</g>
 	</g>
 </g>
 <g id="XMLID_59_">
 	<g id="XMLID_68_">
-		<rect id="XMLID_29_" x="5.2" y="7.6" class="st2" width="14.9" height="186"/>
+		<rect id="XMLID_29_" x="5.2" y="-80.4" class="st4" width="14.9" height="186"/>
 		<g id="XMLID_69_">
-			<line id="XMLID_28_" class="st0" x1="20.1" y1="7.6" x2="20.1" y2="193.6"/>
-			<line id="XMLID_27_" class="st0" x1="5.2" y1="193.6" x2="5.2" y2="7.6"/>
-		</g>
-	</g>
-	<g id="XMLID_60_">
-		<g id="XMLID_61_">
-			<line id="XMLID_26_" class="st0" x1="9.4" y1="7.6" x2="9.4" y2="193.6"/>
-			<line id="XMLID_25_" class="st0" x1="7.5" y1="193.6" x2="7.5" y2="7.6"/>
-			<line id="XMLID_24_" class="st0" x1="13.6" y1="7.6" x2="13.6" y2="193.6"/>
-			<line id="XMLID_23_" class="st0" x1="11.7" y1="193.6" x2="11.7" y2="7.6"/>
-			<line id="XMLID_22_" class="st0" x1="17.8" y1="7.6" x2="17.8" y2="193.6"/>
-			<line id="XMLID_21_" class="st0" x1="15.9" y1="193.6" x2="15.9" y2="7.6"/>
+			<line id="XMLID_28_" class="st1" x1="20.1" y1="-80.4" x2="20.1" y2="105.6"/>
+			<line id="XMLID_27_" class="st1" x1="5.2" y1="105.6" x2="5.2" y2="-80.4"/>
 		</g>
 	</g>
 </g>

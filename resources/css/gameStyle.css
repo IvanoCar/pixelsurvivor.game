@@ -1,8 +1,8 @@
 canvas{
-    border:2px solid black;
+    border:2px solid #007DFF;
     margin:auto;
     display:block;
-    background-color:white;
+    background-color:white;/*   ADD BG IMAGE + edit player and obstacles    */
 }
 
 .centered{
@@ -109,7 +109,7 @@ button{
 }
 
 .gameOverText {
-    position: absolute;                                                                         /*CONVERT TO IMAGE + Z INDEX ON HIGHSOCRE*/
+    position: absolute;
     top: 53%;
     left: 50%;
     width: 100%;
@@ -126,7 +126,7 @@ button{
     transform: translate(-50%, -50%);
     width: 92px;
     height: 92px;
-    color: transparent;                                                                                    /* FIX RESTART BUTTON, TRY CONTROLS BUTTONS*/
+    color: transparent;
     border: 2px;
     box-shadow: none;
     outline: none;
@@ -200,20 +200,3 @@ header{
 .removeButton {
     background-image: url("../buttons/remove_touch.svg");
 }
-
-
-/*
-#game_over_wrapper {
-    width: 100%;
-    height: 50%;
-}
-
-#restart_container {
-    width: 100%;
-    height: 50%;
-}
-
-#game_over_container {
-    width: 100%;
-    height: 50%;
-}*/

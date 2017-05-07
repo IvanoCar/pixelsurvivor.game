@@ -1,4 +1,3 @@
-//MAIN LOOP
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     window.requestAnimationFrame = requestAnimationFrame;
@@ -16,8 +15,14 @@ Resource.PLAYER_STANDING = "resources/images/player/normal.png";
 Resource.PLAYER_JUMPING = "resources/images/player/jump.png";
 Resource.CANVAS_NAME = "gamecanvas";
 Resource.CANVAS_CONTEXT = "2d";
+Resource.OBSTACLE0_IMAGE = "resources/images/obstacles/type0.svg";
+Resource.OBSTACLE1_IMAGE = "resources/images/obstacles/type1.svg";
+Resource.JUMP_POWERUP = "resources/images/powerups/jumpPowerup.png";
+//Resource.JUMP_POWERUP = "resources/images/powerups/jumpPowerup.png";
+
 
 class Canvas {
+
     constructor() {
         Utility.generateCanvas();
         this.canvas = document.getElementById(Resource.CANVAS_NAME);
@@ -41,8 +46,6 @@ class Canvas {
         else {
             this.canvas.height = 350;
         }
-
-
     }
 }
 
@@ -117,8 +120,7 @@ class Player extends PlayerController {
     }
 
     updatePlayerPosition(){
-        /*if (this.ctx == null)
-            return;*/
+
         this.velX *= friction;
         this.velY += gravity;
 
@@ -130,13 +132,16 @@ class Player extends PlayerController {
         if(this.y >= this.canvas.height - this.height){
             this.y = this.canvas.height - this.height;
             this.jumping = false;
-            //player.walking = false;
         }
 
         if(!this.jumping) {
             this.ctx.drawImage(this.im_model, this.x, this.y);
         } else {
-            this.ctx.drawImage(this.im_jump, this.x, this.y);
+            if(this.jumpingPowerUp) {
+                this.ctx.drawImage(this.im_model, this.x, this.y);                                        // NEW MODEL JUMP
+            } else {
+                this.ctx.drawImage(this.im_jump, this.x, this.y);
+            }
         }
     }
 
@@ -162,10 +167,10 @@ class GameController extends Canvas{
     setupMainGameElements(){
         this.frameCount = 0;
         this.collisionControl = new CollisionHandler();
-        this.player = new Player(this.canvas);                                    // solve this
+        this.player = new Player(this.canvas);
         this.objectControl = new ObjectGenController(this.canvas);
-        this.score = new ScoreController();
-        this.info = new InfoText();
+        this.score = new ScoreController(this.canvas);
+        this.info = new InfoText(this.canvas);
         this.gameover = false;
     }
 
@@ -275,8 +280,6 @@ class Utility {
         }
     }
 
-    static generateContainers(){}                                                                   // finish functions
-
     static getCanvasContext(){
         return document.getElementById(Resource.CANVAS_NAME).getContext(Resource.CANVAS_CONTEXT);
     }
@@ -356,7 +359,7 @@ class ExtraControlsHandler {
 }
 
 class ObjectGeneration {
-    constructor(x, y, canvasContext) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
         this.ctx = Utility.getCanvasContext();
@@ -366,6 +369,7 @@ class ObjectGeneration {
 class Obstacle extends ObjectGeneration {
     constructor(x,y){
         super(x,y);
+
     }
     updateObstaclePosition(speed=1){}
 }
@@ -379,11 +383,15 @@ class ObstacleTypeZero extends Obstacle{
     obstacleSetup() {
         this.width = 45 * game.sizeCoef;
         this.height = 200;
+
+        this.obst = new Image();
+        this.obst.src = Resource.OBSTACLE0_IMAGE;
     }
 
     genObstacle() {
-        this.ctx.fillStyle = "blue";
-        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        //this.ctx.fillStyle = "blue";
+        //this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        this.ctx.drawImage(this.obst, this.x, this.y, this.width, this.height)
     }
     updateObstaclePosition(speed=1){
         this.x -= speed;
@@ -399,12 +407,15 @@ class ObstacleTypeOne extends Obstacle{
     }
     obstacleSetup() {
         this.width = 60 * game.sizeCoef;
-        console.log(this.width);
         this.height = 200;
+        this.obst = new Image();
+        this.obst.src = Resource.OBSTACLE1_IMAGE;
     }
     genObstacle() {
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        //this.ctx.fillStyle = "red";
+        //this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        this.ctx.drawImage(this.obst, this.x, this.y, this.width, this.height)
+
     }
     updateObstaclePosition(speed=1){
         this.x += speed;
@@ -453,13 +464,11 @@ class JumpPowerUp extends Powerup{
         game.player.speed = 4;
         game.player.jumpingPowerUp = true;
         setTimeout(JumpPowerUp.deactivateJumpPowerup, 4000);
-        //console.log("Jump activated.");
     }
 
     static deactivateJumpPowerup() {
         game.player.speed = 5.5;
         game.player.jumpingPowerUp = false;
-        //console.log("Jump deactivated.");
     }
 }
 
@@ -482,7 +491,7 @@ class ScorePowerUp extends Powerup {
 
 class CanvasWriter {
     constructor(canvas){
-        this.canvas = canvas;                                                               // solve
+        this.canvas = canvas;
         this.ctx = canvas.getContext(Resource.CANVAS_CONTEXT);
     }
 
@@ -495,8 +504,8 @@ class CanvasWriter {
 }
 
 class ScoreController extends CanvasWriter {
-    constructor(){
-        super();
+    constructor(canvas){
+        super(canvas);
         this.setup();
         this.write();
     }
@@ -512,15 +521,15 @@ class ScoreController extends CanvasWriter {
         this.ctx.font = "bold 20px Arial";
         this.write();
         if(game.isCondEveryInterval(15)) {
-            this.value += 0.25;                                                     // set score text, invert game after
-            this.text = "SCORE : " + this.value;                                               // frame, check FPS- 60?
+            this.value += 0.25;
+            this.text = "SCORE : " + this.value;
         }
     }
 }
 
 class InfoText extends CanvasWriter{
-    constructor() {
-        super();
+    constructor(canvas) {
+        super(canvas);
         this.setup()
     }
 
@@ -570,19 +579,17 @@ class GameOver {
 
     static setGameOverMessage(){
         Utility.generateNewParagraphElement("Game Over! You lasted " + game.score.value + " seconds.", "game_container", "gameOverText");
-//        Utility.generateNewParagraphElement("Game Over! You lasted " + game.score.value + " seconds.", "game_over_container", "gameOverText");
     }
 
     static setHighscore(){
         if (document.cookie != "") {
-            //console.log(["cookie exists.", document.cookie]);
             if (Cookie.get("highscore") < game.score.value) {
                 Cookie.set("highscore", game.score.value);
-                //console.log(["cookie changed.", document.cookie]);
+                GameOver.writeHighscore();
+
             }
         } else {
             Cookie.set("highscore", game.score.value);
-            //console.log(["created cookie", document.cookie, document.cookie.indexOf('highcore=')]);
         }
     }
 
@@ -593,7 +600,6 @@ class GameOver {
         }
     }
 }
-
 
 class ObjectGenController {
     constructor(canvas) {
@@ -617,7 +623,7 @@ class ObjectGenController {
             this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.genY[0]));
         } else if (game.isCondEveryInterval(this.intervalTwo)){
             this.obstaclesOne.push(new ObstacleTypeOne(-35, this.genY[1]));
-        }else if (game.isCondEveryInterval(1002)){
+        } else if (game.isCondEveryInterval(1002)){
             this.powerups[0] = (new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
         } else if (game.isCondEveryInterval(1200)){
             this.powerups[1] = (new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
@@ -632,7 +638,7 @@ class ObjectGenController {
         this.genY[1] = zeroEl;
     }
 
-    updatePowerupStatus(){                                                                                  // try looping
+    updatePowerupStatus(){
         if((this.powerups[0])) {
             this.powerups[0].keepActive();
         }
@@ -645,13 +651,12 @@ class ObjectGenController {
 
     increaseDifficulty(){
         if (game.isCondEveryInterval(600)){
-            //alert([this.intervalTwo, this.intervalOne]);
             if(this.speedIncreaseCoef < 4.9)
                 this.speedIncreaseCoef += 0.35;
             else
                 this.speedIncreaseCoef = 4.9;
 
-            if(this.intervalOne > this.intervalCap)                                       //SPLIT INTO FUNCTIONS
+            if(this.intervalOne > this.intervalCap)
                 this.intervalOne -= 8;
             else
                 this.intervalOne = this.intervalCap;
@@ -686,7 +691,7 @@ class SplitScreen {
     }
 
     calculateScreenFragments(){
-        return (Math.round(this.max / 80));
+        return (Math.round(this.max / 75));
     }
 }
 
@@ -716,7 +721,7 @@ class CollisionHandler extends SplitScreen {
         }
          for (var i = index; i < max; i++) {*/
 
-        for (var i = 0; i < this.intervalsArray.length; i++) { // && skip frames
+        for (var i = 0; i < this.intervalsArray.length; i++) {
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
                 this.loopObstacles(game.objectControl.obstaclesZero, 2, i);
                 this.loopObstacles(game.objectControl.obstaclesOne, 1.25, i);
@@ -734,7 +739,6 @@ class CollisionHandler extends SplitScreen {
 
             if(Utility.isBetween(obstacleArray[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
                 if(CollisionHandler.checkCollisionOnTwoObjects(game.player, obstacleArray[j])) {
-                    //console.log("Collision.");
                     game.gameover = true;
                 }
             }
@@ -746,7 +750,6 @@ class CollisionHandler extends SplitScreen {
             try {
                 if (Utility.isBetween(powerupArray[j].x, this.intervalsArray[i], this.intervalsArray[i + 1])) {
                     if (CollisionHandler.checkCollisionOnTwoObjects(game.player, powerupArray[j]) && powerupArray[j].active) {
-                        //console.log("Collision with powerup.");
                         powerupArray[j].activate();
                         powerupArray.splice(j, 1);
                         break;
@@ -791,20 +794,15 @@ class Game {
         console.log("Game over.");
         GameOver.setGameOverMessage();
         GameOver.setHighscore();
-        GameOver.writeHighscore();
 
         Utility.generateNewButton("RESTART", "game_container", "restartButton");
-        //        Utility.generateNewButton("RESTART", "restart_container", "restartButton");
 
         //this.clearCanvas();
 
     }
 
     static restart() {
-        //console.log("Restart pressed.");
         Utility.deleteChildrenOnEl("game_container");
-       // Utility.deleteChildrenOnEl("game_over_wrapper");
-
         game = new GameController();
         update();
     }
@@ -841,7 +839,6 @@ class Game {
         });*/
     }
 }
-
 
 
 Game.setup();

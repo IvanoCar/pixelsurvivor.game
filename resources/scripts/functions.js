@@ -11,12 +11,12 @@ gravity = 0.3;
 
 
 class Resource{}
+Resource.CANVAS_NAME = "gamecanvas";
+Resource.CANVAS_CONTEXT = "2d";
 Resource.PLAYER_STANDING = "resources/images/player/normal.png";
 Resource.PLAYER_JUMPING = "resources/images/player/jump.png";
 Resource.PLAYER_NORMAL_P = "resources/images/player/normal_jp.png";
 Resource.PLAYER_JUMPING_P = "resources/images/player/jump_jp.png";
-Resource.CANVAS_NAME = "gamecanvas";
-Resource.CANVAS_CONTEXT = "2d";
 Resource.OBSTACLE0_IMAGE = "resources/images/obstacles/type0.svg";
 Resource.OBSTACLE1_IMAGE = "resources/images/obstacles/type1.svg";
 Resource.JUMP_POWERUP = "resources/images/powerups/jumpPowerup.png";
@@ -636,7 +636,19 @@ class ObjectGenController {
             this.powerups[1] = (new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
         } else if(game.isCondEveryInterval(2700)){
             this.swapY();
+        } else if(game.isCondEveryInterval(3000)) {
+            this.changeCanvasColor();
+        } else if(game.isCondEveryInterval(3600)) {
+            this.revertCanvasColor();
         }
+    }
+
+    changeCanvasColor() {
+        this.canvas.style.backgroundColor = "#007DFF";
+    }
+
+    revertCanvasColor() {
+        this.canvas.style.backgroundColor = "#ffffff";
     }
 
     swapY(){

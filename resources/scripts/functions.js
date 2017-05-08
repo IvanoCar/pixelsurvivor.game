@@ -593,7 +593,6 @@ class GameOver {
             if (Cookie.get("highscore") < game.score.value) {
                 Cookie.set("highscore", game.score.value);
                 GameOver.writeHighscore();
-
             }
         } else {
             Cookie.set("highscore", game.score.value);
@@ -628,17 +627,17 @@ class ObjectGenController {
     pushObject(){
         if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){
             this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.genY[0]));
-        } else if (game.isCondEveryInterval(this.intervalTwo)){
+        } if (game.isCondEveryInterval(this.intervalTwo)){
             this.obstaclesOne.push(new ObstacleTypeOne(-35, this.genY[1]));
-        } else if (game.isCondEveryInterval(1002)){
+        }  if (game.isCondEveryInterval(1002)){
             this.powerups[0] = (new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
-        } else if (game.isCondEveryInterval(1200)){
+        }  if (game.isCondEveryInterval(1200)){
             this.powerups[1] = (new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
-        } else if(game.isCondEveryInterval(2700)){
+        }  if(game.isCondEveryInterval(2700)){
             this.swapY();
-        } else if(game.isCondEveryInterval(3000)) {
+        }  if(game.isCondEveryInterval(3000)) {
             this.changeCanvasColor();
-        } else if(game.isCondEveryInterval(3600)) {
+        }  if(game.isCondEveryInterval(3600)) {
             this.revertCanvasColor();
         }
     }
@@ -665,7 +664,6 @@ class ObjectGenController {
         if(this.powerups[1]){
             this.powerups[1].keepActive(600);
         }
-
     }
 
     increaseDifficulty(){
@@ -794,7 +792,7 @@ class Game {
 
     static setup(){
         Utility.generateNewButton("START", "game_container", "newGameButton");
-        Game.addListeners(); // START BUTTON, NEW PAGE HOW TO PLAY AND GO TO GAME  // info writer , highscore, cookie hoghcore
+        Game.addListeners();
     }
 
     static startGame() {

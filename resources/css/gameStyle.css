@@ -3,6 +3,9 @@ canvas{
     margin:auto;
     display:block;
     background-color:white;/*   ADD BG IMAGE + edit player and obstacles    */
+    -webkit-transition: background-color 1000ms linear;
+    -ms-transition: background-color 1000ms linear;
+    transition: background-color 1000ms linear;
 }
 
 .centered{

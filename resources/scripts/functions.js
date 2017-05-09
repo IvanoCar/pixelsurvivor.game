@@ -187,7 +187,6 @@ class GameController extends Canvas{
     clearCanvas(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-
 }
 
 class Utility {

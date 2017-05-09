@@ -26,8 +26,9 @@ Resource.SCORE_POWERUP = "resources/images/powerups/scorePowerup.png";
 class Canvas {
 
     constructor() {
-        Utility.generateCanvas();
-        this.canvas = document.getElementById(Resource.CANVAS_NAME);
+        //Utility.generateCanvas();
+        //this.canvas = document.getElementById(Resource.CANVAS_NAME);
+        this.canvas = Utility.generateCanvas();
         this.ctx = this.canvas.getContext(Resource.CANVAS_CONTEXT);
         if(Utility.getScreenWidth() > 800) {
             this.canvas.width = 800;
@@ -38,14 +39,11 @@ class Canvas {
             this.canvas.width = Utility.getScreenWidth() - 10;
             this.needsTouchControls = true;
             this.sizeCoef = 0.65;
-
         }
 
         if(Utility.getScreenHeight() < 500) {
             this.canvas.height = 300;
-
-        }
-        else {
+        } else {
             this.canvas.height = 350;
         }
     }
@@ -269,6 +267,7 @@ class Utility {
         newCanvas.setAttribute("class", "centered");
         newCanvas.setAttribute("id", "gamecanvas");
         document.getElementById("game_container").appendChild(newCanvas);
+        return newCanvas;
     }
 
     static deleteChildrenOnEl(name){
@@ -856,7 +855,6 @@ class Game {
         });*/
     }
 }
-
 
 Game.setup();
 

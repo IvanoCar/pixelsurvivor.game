@@ -3,7 +3,7 @@
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-var keys, friction, gravity, game;
+var keys, friction, gravity, game, sound;
 keys = [];
 friction = 0.8;
 gravity = 0.3;
@@ -21,6 +21,11 @@ Resource.OBSTACLE0_IMAGE = "resources/images/obstacles/type0.svg";
 Resource.OBSTACLE1_IMAGE = "resources/images/obstacles/type1.svg";
 Resource.JUMP_POWERUP = "resources/images/powerups/jumpPowerup.png";
 Resource.SCORE_POWERUP = "resources/images/powerups/scorePowerup.png";
+Resource.BG_MUSIC = "resources/sounds/bg_music.mp3";
+Resource.END_SOUND = "resources/sounds/end.wav";
+Resource.JUMP_SOUND = "resources/sounds/jump2.wav";
+Resource.POWUP_SOUND_1 = "resources/sounds/powerup1.wav";
+Resource.POWUP_SOUND_2 = "resources/sounds/powerup2.wav";
 
 
 class Canvas {
@@ -59,6 +64,7 @@ class PlayerController {
             this.jumping = true;
             this.velY = - this.speed*2;
         }
+        sound.jumpSound.play();
     }
 
     right(moveby=1){
@@ -291,6 +297,7 @@ class ExtraControlsHandler {
         ExtraControlsHandler.generateUpButton(0);
         Utility.generateNewButton("SWITCH", "controls_container", "switchButton");
 
+        sound.bgMusic.play();
         update();
     }
 
@@ -302,7 +309,7 @@ class ExtraControlsHandler {
         ExtraControlsHandler.generateUpButton(1);
         Utility.generateNewButton("SWITCH", "controls_container", "switchButton");
 
-
+        sound.bgMusic.play();
         update();
     }
 
@@ -457,12 +464,13 @@ class JumpPowerUp extends Powerup{
         this.ctx.drawImage(this.jp, this.x, this.y, this.width, this.height);
     }
 
-    activate(){                             // on collision with powerup object  |  CHANGE PLAYER APPEREANCE + duration 4 s jump powerup
+    activate(){
         game.info.jumpPowerupActivatedInfo();
         game.player.im_model.src = Resource.PLAYER_NORMAL_P;
         game.player.im_jump.src = Resource.PLAYER_JUMPING_P;
         game.player.speed = 4.2;
         game.player.jumpingPowerUp = true;
+        sound.powerup1Sound.play();
         setTimeout(JumpPowerUp.deactivateJumpPowerup, 4000);
     }
 
@@ -491,6 +499,7 @@ class ScorePowerUp extends Powerup {
     activate() {
         game.score.value += 5;
         game.info.scorePowerupActivatedInfo();
+        sound.powerup2Sound.play();
     }
 }
 
@@ -786,6 +795,32 @@ class CollisionHandler extends SplitScreen {
     }
 }
 
+class SoundController {
+    constructor() {
+        this.bgMusic = this.setupBackgroundMusic();
+        this.setupOtherSounds();
+    }
+
+    setupBackgroundMusic() {
+        var bgMusic = new Audio(Resource.BG_MUSIC);
+        bgMusic.volume = 0.35;
+        bgMusic.addEventListener('ended', function() {this.play();}, false);
+        return bgMusic;
+    }
+
+    stopBgSound(){
+        this.bgMusic.pause();
+        this.bgMusic.currentTime = 0;
+    }
+
+    setupOtherSounds() {
+        this.endSound = new Audio(Resource.END_SOUND);
+        this.jumpSound = new Audio(Resource.JUMP_SOUND);
+        this.powerup1Sound = new Audio(Resource.POWUP_SOUND_1);
+        this.powerup2Sound = new Audio(Resource.POWUP_SOUND_2);
+    }
+}
+
 class Game {
 
     static setup(){
@@ -794,6 +829,8 @@ class Game {
     }
 
     static startGame() {
+        sound = new SoundController();
+
         Utility.deleteChildrenOnEl("game_container");
         GameOver.writeHighscore();
         game = new GameController();
@@ -801,17 +838,18 @@ class Game {
             ExtraControlsHandler.generateAdditionalControls();
         } else {
             update();
+            sound.bgMusic.play();
             ExtraControlsHandler.generateButtonXtraControl();
         }
     }
 
     static endGame(){
         console.log("Game over.");
+        sound.stopBgSound();
+        setTimeout(function () {sound.endSound.play();}, 150);
         GameOver.setGameOverMessage();
         GameOver.setHighscore();
-
         Utility.generateNewButton("RESTART", "game_container", "restartButton");
-
         //this.clearCanvas();
 
     }
@@ -819,6 +857,7 @@ class Game {
     static restart() {
         Utility.deleteChildrenOnEl("game_container");
         game = new GameController();
+        sound.bgMusic.play();
         update();
     }
 

@@ -91,6 +91,14 @@ class Player extends PlayerController {
         this.defaultValues();
     }
 
+    setPlayerSizeCoef() {
+        if(this.canvas.width < 800) {
+            this.playerSizeC = 0.7;
+        } else {
+            this.playerSizeC = 1;
+        }
+    }
+
     setupPlayerModel(){
         this.im_model = new Image();
         this.im_model.src = Resource.PLAYER_STANDING;
@@ -99,10 +107,11 @@ class Player extends PlayerController {
     }
 
     defaultValues(){
+        this.setPlayerSizeCoef();
         this.y = this.canvas.height-5;
         this.x = (this.canvas.width/2)/2;
-        this.width = 30;
-        this.height = 30;
+        this.width = 30 * this.playerSizeC;
+        this.height = 30 * this.playerSizeC;
         this.speed = 5.7;
         this.velX = 0;
         this.velY = 0;
@@ -434,8 +443,8 @@ class Powerup extends ObjectGeneration {
 
     }
     powerupSetup() {
-        this.width = 30;
-        this.height = 30;
+        this.width = 30 * game.sizeCoef;
+        this.height = 30 * game.sizeCoef;
     }
 
     keepActive(noFrames=400){

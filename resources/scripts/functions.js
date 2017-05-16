@@ -17,8 +17,8 @@ Resource.PLAYER_STANDING = "resources/images/player/normal.png";
 Resource.PLAYER_JUMPING = "resources/images/player/jump.png";
 Resource.PLAYER_NORMAL_P = "resources/images/player/normal_jp.png";
 Resource.PLAYER_JUMPING_P = "resources/images/player/jump_jp.png";
-Resource.OBSTACLE0_IMAGE = "resources/images/obstacles/type0.svg";
-Resource.OBSTACLE1_IMAGE = "resources/images/obstacles/type1.svg";
+Resource.OBSTACLE0_IMAGE = "resources/images/obstacles/type0.png";
+Resource.OBSTACLE1_IMAGE = "resources/images/obstacles/type1.png";
 Resource.JUMP_POWERUP = "resources/images/powerups/jumpPowerup.png";
 Resource.SCORE_POWERUP = "resources/images/powerups/scorePowerup.png";
 Resource.BG_MUSIC = "resources/sounds/bg_music.mp3";
@@ -107,7 +107,6 @@ class Player extends PlayerController {
         this.velX = 0;
         this.velY = 0;
         this.jumping = false;
-        //this.walking = false;
         this.jumpingPowerUp = false;
     }
 
@@ -645,7 +644,7 @@ class ObjectGenController {
             this.swapY();
         }  if(game.isCondEveryInterval(3000)) {
             this.changeCanvasColor();
-        }  if(game.isCondEveryInterval(3600)) {
+        }  if(game.isCondEveryInterval(4200)) {
             this.revertCanvasColor();
         }
     }

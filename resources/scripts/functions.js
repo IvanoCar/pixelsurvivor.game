@@ -631,7 +631,7 @@ class ObjectGenController {
 
     }
 
-    pushObject(){
+    pushObjectPlus(){
         if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){
             this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.genY[0]));
         } if (game.isCondEveryInterval(this.intervalTwo)){
@@ -905,7 +905,7 @@ function update(){
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;
-    game.objectControl.pushObject();
+    game.objectControl.pushObjectPlus();
     game.objectControl.increaseDifficulty();
     game.collisionControl.checkInterval();
     game.objectControl.updatePowerupStatus();

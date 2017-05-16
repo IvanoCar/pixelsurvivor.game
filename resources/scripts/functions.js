@@ -60,11 +60,12 @@ class PlayerController {
         if(!this.jumping) {
             this.jumping = true;
             this.velY = - this.speed*2;
+            sound.jumpSound.play();
         } else if (this.jumpingPowerUp){
             this.jumping = true;
             this.velY = - this.speed*2;
+            sound.jumpSound.play();
         }
-        sound.jumpSound.play();
     }
 
     right(moveby=1){

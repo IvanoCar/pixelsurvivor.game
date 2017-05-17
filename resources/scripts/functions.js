@@ -273,6 +273,12 @@ class Utility {
             case "SWITCH":
                 button.setAttribute("onclick", "ExtraControlsHandler.switchControls()");
                 break;
+            case "MUTE":
+                button.setAttribute("onclick", "ExtraControlsHandler.muteB()");
+                break;
+            case "UNMUTE":
+                button.setAttribute("onclick", "ExtraControlsHandler.unMuteB()");
+                break;
         }
     }
 
@@ -338,21 +344,48 @@ class ExtraControlsHandler {
 
     }
 
-    static generateButtonXtraControl(){
+    static giveSmallMuteButton() {
+        Utility.generateNewButton("MUTE", "header", "muteSmall");
+    }
+
+    static generateExtraButtons(){
         Utility.generateNewButton("GIVE EXTRA CONTROLS", "extrabuttons", "addButton");
+        Utility.generateNewButton("MUTE", "extrabuttons", "muteButton");
     }
 
     static giveButtons(){
-        Utility.deleteChildrenOnEl("extrabuttons");
+        Utility.removeElementByClass("addButton");
         ExtraControlsHandler.generateAdditionalControls();
         Utility.generateNewButton("REMOVE BUTTONS", "extrabuttons", "removeButton");
     }
-
     static removeButtons() {
-        Utility.deleteChildrenOnEl("extrabuttons");
+        Utility.removeElementByClass("removeButton");
         Utility.deleteChildrenOnEl("controls_container");
-        ExtraControlsHandler.generateButtonXtraControl();
+        Utility.generateNewButton("GIVE EXTRA CONTROLS", "extrabuttons", "addButton");
     }
+
+    static muteB() {
+        try {
+            Utility.removeElementByClass("muteButton");
+            Utility.generateNewButton("UNMUTE", "extrabuttons", "unMuteButton");
+        } catch (TypeError){
+            Utility.removeElementByClass("muteSmall");
+            Utility.generateNewButton("UNMUTE", "header", "unMuteSmall");
+        }
+        SoundController.mute()
+    }
+
+    static unMuteB(){
+        try {
+            Utility.removeElementByClass("unMuteButton");
+            Utility.generateNewButton("MUTE", "extrabuttons", "muteButton");
+        } catch(TypeError) {
+            Utility.removeElementByClass("unMuteSmall");
+            Utility.generateNewButton("MUTE", "header", "muteSmall");
+        }
+        SoundController.unMute();
+    }
+
 
     static switchControls() {
         if (document.getElementsByClassName("upButton0")[0] != undefined){
@@ -806,6 +839,7 @@ class CollisionHandler extends SplitScreen {
 
 class SoundController {
     constructor() {
+        this.muted = false;
         this.bgMusic = this.setupBackgroundMusic();
         this.setupOtherSounds();
     }
@@ -828,6 +862,24 @@ class SoundController {
         this.powerup1Sound = new Audio(Resource.POWUP_SOUND_1);
         this.powerup2Sound = new Audio(Resource.POWUP_SOUND_2);
     }
+
+    static mute() {
+        sound.bgMusic.pause();
+        sound.endSound.volume = 0;
+        sound.jumpSound.volume = 0;
+        sound.powerup1Sound.volume = 0;
+        sound.powerup2Sound.volume = 0;
+        sound.muted = true;
+    }
+
+    static unMute() {
+        sound.bgMusic.play();
+        sound.endSound.volume = 1;
+        sound.jumpSound.volume = 1;
+        sound.powerup1Sound.volume = 1;
+        sound.powerup2Sound.volume = 1;
+        sound.muted = false;
+    }
 }
 
 class Game {
@@ -845,10 +897,11 @@ class Game {
         game = new GameController();
         if(game.needsTouchControls) {
             ExtraControlsHandler.generateAdditionalControls();
+            ExtraControlsHandler.giveSmallMuteButton();
         } else {
             update();
             sound.bgMusic.play();
-            ExtraControlsHandler.generateButtonXtraControl();
+            ExtraControlsHandler.generateExtraButtons();
         }
     }
 
@@ -866,7 +919,9 @@ class Game {
     static restart() {
         Utility.deleteChildrenOnEl("game_container");
         game = new GameController();
-        sound.bgMusic.play();
+        if(!sound.muted) {
+            sound.bgMusic.play();
+        }
         update();
     }
 

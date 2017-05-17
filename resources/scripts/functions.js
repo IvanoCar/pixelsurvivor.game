@@ -54,37 +54,8 @@ class Canvas {
     }
 }
 
-class PlayerController {
-
-    jump(){
-        if(!this.jumping) {
-            this.jumping = true;
-            this.velY = - this.speed*2;
-            sound.jumpSound.play();
-        } else if (this.jumpingPowerUp){
-            this.jumping = true;
-            this.velY = - this.speed*2;
-            sound.jumpSound.play();
-        }
-    }
-
-    right(moveby=1){
-        if (this.velX < this.speed) {
-            this.velX+= moveby;
-        }
-    }
-
-    left(moveby=1){
-        if (this.velX > - this.speed) {
-            this.velX-= moveby;
-        }
-    }
-}
-
-
-class Player extends PlayerController {
+class Player {
     constructor(canvas) {
-        super();
         this.canvas = canvas;
         this.ctx = canvas.getContext(Resource.CANVAS_CONTEXT);
         this.setupPlayerModel();
@@ -157,6 +128,37 @@ class Player extends PlayerController {
     }
 }
 
+class PlayerController extends Player {
+
+    constructor(canvas) {
+        super(canvas);
+    }
+
+    jump(){
+        if(!this.jumping) {
+            this.jumping = true;
+            this.velY = - this.speed*2;
+            sound.jumpSound.play();
+        } else if (this.jumpingPowerUp){
+            this.jumping = true;
+            this.velY = - this.speed*2;
+            sound.jumpSound.play();
+        }
+    }
+
+    right(moveby=1){
+        if (this.velX < this.speed) {
+            this.velX+= moveby;
+        }
+    }
+
+    left(moveby=1){
+        if (this.velX > - this.speed) {
+            this.velX-= moveby;
+        }
+    }
+}
+
 
 class Keys{
     static update(){
@@ -177,7 +179,7 @@ class GameController extends Canvas{
     setupMainGameElements(){
         this.frameCount = 0;
         this.collisionControl = new CollisionHandler();
-        this.player = new Player(this.canvas);
+        this.player = new PlayerController(this.canvas);
         this.objectControl = new ObjectGenController(this.canvas);
         this.score = new ScoreController(this.canvas);
         this.info = new InfoText(this.canvas);

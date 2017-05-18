@@ -314,7 +314,8 @@ class ExtraControlsHandler {
         ExtraControlsHandler.generateUpButton(0);
         Utility.generateNewButton("SWITCH", "controls_container", "switchButton");
 
-        sound.bgMusic.play();
+        if(!sound.muted)
+            sound.bgMusic.play();
         update();
     }
 
@@ -326,7 +327,8 @@ class ExtraControlsHandler {
         ExtraControlsHandler.generateUpButton(1);
         Utility.generateNewButton("SWITCH", "controls_container", "switchButton");
 
-        sound.bgMusic.play();
+        if(!sound.muted)
+            sound.bgMusic.play();
         update();
     }
 

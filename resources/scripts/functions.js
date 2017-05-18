@@ -689,7 +689,7 @@ class ObjectGenController {
         }  if(game.isCondEveryInterval(3000)) {
             this.changeCanvasColor();
         }  if(game.isCondEveryInterval(4200)) {
-            this.revertCanvasColor();
+            this.revertCanvasColor();                                                                                   // RANDOMIZE INTERVALS
         }
     }
 

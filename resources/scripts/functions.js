@@ -374,7 +374,7 @@ class ExtraControlsHandler {
             Utility.removeElementByClass("muteSmall");
             Utility.generateNewButton("UNMUTE", "header", "unMuteSmall");
         }
-        SoundController.mute()
+        sound.mute();
     }
 
     static unMuteB(){
@@ -385,7 +385,7 @@ class ExtraControlsHandler {
             Utility.removeElementByClass("unMuteSmall");
             Utility.generateNewButton("MUTE", "header", "muteSmall");
         }
-        SoundController.unMute();
+        sound.unMute();
     }
 
 
@@ -865,22 +865,22 @@ class SoundController {
         this.powerup2Sound = new Audio(Resource.POWUP_SOUND_2);
     }
 
-    static mute() {
-        sound.bgMusic.pause();
-        sound.endSound.volume = 0;
-        sound.jumpSound.volume = 0;
-        sound.powerup1Sound.volume = 0;
-        sound.powerup2Sound.volume = 0;
-        sound.muted = true;
+    mute() {
+        this.bgMusic.pause();
+        this.endSound.volume = 0;
+        this.jumpSound.volume = 0;
+        this.powerup1Sound.volume = 0;
+        this.powerup2Sound.volume = 0;
+        this.muted = true;
     }
 
-    static unMute() {
-        sound.bgMusic.play();
-        sound.endSound.volume = 1;
-        sound.jumpSound.volume = 1;
-        sound.powerup1Sound.volume = 1;
-        sound.powerup2Sound.volume = 1;
-        sound.muted = false;
+    unMute() {
+        this.bgMusic.play();
+        this.endSound.volume = 1;
+        this.jumpSound.volume = 1;
+        this.powerup1Sound.volume = 1;
+        this.powerup2Sound.volume = 1;
+        this.muted = false;
     }
 }
 

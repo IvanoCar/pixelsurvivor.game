@@ -9,6 +9,8 @@ friction = 0.8;
 gravity = 0.3;
 
 
+class Globals {}
+
 
 class Resource{}
 Resource.CANVAS_NAME = "gamecanvas";
@@ -343,11 +345,9 @@ class ExtraControlsHandler {
     }
 
     static generateAdditionalControls() {
-
         Utility.generateNewParagraphElement("Are you left handed or right handed?", "controls_container", "centeredDiv");
         Utility.generateNewButton("Left", "controls_container", "buttonStyle");
         Utility.generateNewButton("Right", "controls_container", "buttonStyle");
-
     }
 
     static giveSmallMuteButton() {
@@ -911,9 +911,8 @@ class Game {
     }
 
     static endGame(){
-        console.log("Game over.");
         sound.stopBgSound();
-        setTimeout(function () {sound.endSound.play();}, 150);                                 // play on collision
+        setTimeout(function () {sound.endSound.play();}, 150);
         GameOver.setGameOverMessage();
         GameOver.setHighscore();
         Utility.generateNewButton("RESTART", "game_container", "restartButton");

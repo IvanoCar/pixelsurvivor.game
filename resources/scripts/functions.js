@@ -252,7 +252,7 @@ class Utility {
                 button.setAttribute("onclick", "ExtraControlsHandler.generateRightHandedControls()");
                 break;
             case "<":
-                button.setAttribute("onclick", "window.game.player.left(7)");                                   // OPTIMIZE
+                button.setAttribute("onclick", "window.game.player.left(7)");
                 break;
             case ">":
                 button.setAttribute("onclick", "window.game.player.right(7)");
@@ -314,9 +314,10 @@ class ExtraControlsHandler {
         ExtraControlsHandler.generateUpButton(0);
         Utility.generateNewButton("SWITCH", "controls_container", "switchButton");
 
-        if(!sound.muted)
+        if(!sound.muted && !game.gameover)
             sound.bgMusic.play();
-        update();
+        if(!game.gameover)
+            update();
     }
 
     static generateRightHandedControls() {
@@ -327,9 +328,10 @@ class ExtraControlsHandler {
         ExtraControlsHandler.generateUpButton(1);
         Utility.generateNewButton("SWITCH", "controls_container", "switchButton");
 
-        if(!sound.muted)
+        if(!sound.muted && !game.gameover)
             sound.bgMusic.play();
-        update();
+        if(!game.gameover)
+            update();
     }
 
     static generateUpButton(mode){
@@ -645,11 +647,11 @@ class GameOver {
         if (document.cookie != "") {
             if (Cookie.get("highscore") < game.score.value) {
                 Cookie.set("highscore", game.score.value);
-                GameOver.writeHighscore();
             }
         } else {
             Cookie.set("highscore", game.score.value);
         }
+        GameOver.writeHighscore();
     }
 
     static writeHighscore(){
@@ -691,7 +693,7 @@ class ObjectGenController {
         }  if(game.isCondEveryInterval(3000)) {
             this.changeCanvasColor();
         }  if(game.isCondEveryInterval(4200)) {
-            this.revertCanvasColor();                                                                                   // RANDOMIZE INTERVALS
+            this.revertCanvasColor();
         }
     }
 
@@ -749,7 +751,6 @@ class SplitScreen {
 
     splitScreen() {
         var intervals = this.calculateScreenFragments();
-        console.log([intervals, this.max]);
         for(var i = 0; this.max > i;) {
             this.array.push(this.max/intervals + i);
             i = this.max/intervals + i;
@@ -912,7 +913,7 @@ class Game {
     static endGame(){
         console.log("Game over.");
         sound.stopBgSound();
-        setTimeout(function () {sound.endSound.play();}, 150);
+        setTimeout(function () {sound.endSound.play();}, 150);                                 // play on collision
         GameOver.setGameOverMessage();
         GameOver.setHighscore();
         Utility.generateNewButton("RESTART", "game_container", "restartButton");

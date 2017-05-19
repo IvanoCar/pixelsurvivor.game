@@ -11,25 +11,25 @@ header h1{
 }
 
 #text_container{
-    padding: 5% 5% 15%;
-    top: 15%;
     position: absolute;
+    top: 15%;
+    left:0;
     overflow-x: hidden;
+    text-align: center;
+    width: 100%;
 }
 
 #text_container p {
-    text-align: justify;
     font-size: 100%;
     color: #757575;
-    margin-top: auto;
-    margin-bottom: auto;
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+
 }
 
 body{
     background-color: #212121;
-    text-align: center;
     width: 100%;
-
 }
 
 header, footer {
@@ -38,9 +38,7 @@ header, footer {
     width: 100%;
     left: 0;
     margin-top: auto;
-    margin-bottom: auto;                                                            /*  ????
-                                                                                 solve font size
-    */
+    margin-bottom: auto;
 }
 
 footer {
@@ -57,7 +55,6 @@ footer p {
 }
 
 header {
-    padding: 1%;
     height: 15%;
     background-color: #303F9F;
     left: 0;

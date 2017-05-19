@@ -10,6 +10,11 @@ gravity = 0.3;
 
 
 class Globals {}
+Globals.keys = [];
+Globals.friction = 0.8;
+Globals.gravity = 0.3;
+Globals.game = undefined;
+Globals.sound = undefined;
 
 
 class Resource{}
@@ -348,6 +353,7 @@ class ExtraControlsHandler {
         Utility.generateNewParagraphElement("Are you left handed or right handed?", "controls_container", "centeredDiv");
         Utility.generateNewButton("Left", "controls_container", "buttonStyle");
         Utility.generateNewButton("Right", "controls_container", "buttonStyle");
+
     }
 
     static giveSmallMuteButton() {

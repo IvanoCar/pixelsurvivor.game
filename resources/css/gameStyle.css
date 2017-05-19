@@ -2,7 +2,7 @@ canvas{
     border:2px solid #007DFF;
     margin:auto;
     display:block;
-    background-color:white;/*   ADD BG IMAGE + edit player and obstacles    */
+    background-color:white;
     -webkit-transition: background-color 1000ms linear;
     -ms-transition: background-color 1000ms linear;
     transition: background-color 1000ms linear;
@@ -61,7 +61,7 @@ body {
     display: inline-block;
     position: relative;
     top: 25%;
-    width: 18%;                                                                                 /* OPTIMIZE */
+    width: 18%;
     height: 75%;
     color: transparent;
     border: 4px solid #007DFF;

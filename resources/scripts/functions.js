@@ -38,19 +38,16 @@ Resource.POWUP_SOUND_1 = "resources/sounds/powerup1.wav";
 Resource.POWUP_SOUND_2 = "resources/sounds/powerup2.wav";
 Resource.POWUP_SOUND_3 = "resources/sounds/powerup3.wav";
 
-
-
-
 class Canvas {
 
     constructor() {
         this.canvas = Utility.generateCanvas();
         this.ctx = this.canvas.getContext(Resource.CANVAS_CONTEXT);
+
         if(Utility.getScreenWidth() > 800) {
             this.canvas.width = 800;
             this.needsTouchControls = false;
             this.sizeCoef = 1;
-
         } else {
             this.canvas.width = Utility.getScreenWidth() - 10;
             this.needsTouchControls = true;
@@ -936,13 +933,12 @@ class SoundController {
 class Game {
 
     static setup(){
+        sound = new SoundController();
         Utility.generateNewButton("START", "game_container", "newGameButton");
         Game.addListeners();
     }
 
     static startGame() {
-        sound = new SoundController();
-
         Utility.deleteChildrenOnEl("game_container");
         GameOver.writeHighscore();
         game = new GameController();

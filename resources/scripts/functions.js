@@ -906,7 +906,7 @@ class SoundController {
         this.jumpSound = new Audio(Resource.JUMP_SOUND);
         this.powerup1Sound = new Audio(Resource.POWUP_SOUND_1);
         this.powerup2Sound = new Audio(Resource.POWUP_SOUND_2);
-        this.powerup3Sound = new Audio(Resource.POWUP_SOUND_3)
+        this.powerup3Sound = new Audio(Resource.POWUP_SOUND_3);
     }
 
     mute() {

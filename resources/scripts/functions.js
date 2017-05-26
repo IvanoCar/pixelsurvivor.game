@@ -24,22 +24,26 @@ Resource.PLAYER_STANDING = "resources/images/player/normal.png";
 Resource.PLAYER_JUMPING = "resources/images/player/jump.png";
 Resource.PLAYER_NORMAL_P = "resources/images/player/normal_jp.png";
 Resource.PLAYER_JUMPING_P = "resources/images/player/jump_jp.png";
+Resource.PLAYER_JUMPING_GM = "resources/images/player/jump_gm.png";
+Resource.PLAYER_NORMAL_GM = "resources/images/player/normal_gm.png";
 Resource.OBSTACLE0_IMAGE = "resources/images/obstacles/type0.png";
 Resource.OBSTACLE1_IMAGE = "resources/images/obstacles/type1.png";
 Resource.JUMP_POWERUP = "resources/images/powerups/jumpPowerup.png";
 Resource.SCORE_POWERUP = "resources/images/powerups/scorePowerup.png";
+Resource.GOD_MODE_POWERUP = "resources/images/powerups/gmPow.png";
 Resource.BG_MUSIC = "resources/sounds/bg_music.mp3";
 Resource.END_SOUND = "resources/sounds/end.wav";
 Resource.JUMP_SOUND = "resources/sounds/jump2.wav";
 Resource.POWUP_SOUND_1 = "resources/sounds/powerup1.wav";
 Resource.POWUP_SOUND_2 = "resources/sounds/powerup2.wav";
+Resource.POWUP_SOUND_3 = "resources/sounds/powerup3.wav";
+
+
 
 
 class Canvas {
 
     constructor() {
-        //Utility.generateCanvas();
-        //this.canvas = document.getElementById(Resource.CANVAS_NAME);
         this.canvas = Utility.generateCanvas();
         this.ctx = this.canvas.getContext(Resource.CANVAS_CONTEXT);
         if(Utility.getScreenWidth() > 800) {
@@ -95,6 +99,7 @@ class Player {
         this.velY = 0;
         this.jumping = false;
         this.jumpingPowerUp = false;
+        this.god = false;
     }
 
     checkCanvasLimits(){
@@ -311,7 +316,6 @@ class Utility {
     }
 }
 
-
 class ExtraControlsHandler {
     static generateLeftHandedControls() {
         console.log("Generate left.");
@@ -401,14 +405,9 @@ class ExtraControlsHandler {
 
     static switchControls() {
         if (document.getElementsByClassName("upButton0")[0] != undefined){
-            /*Utility.deleteChildrenOnEl("controls_container");
-            ExtraControlsHandler.generateRightHandedControls();*/
             Utility.removeElementByClass("upButton0");
             ExtraControlsHandler.generateUpButton(1);
-
         } else { //if (document.getElementsByClassName("upButton1")[0] != undefined){
-            /*Utility.deleteChildrenOnEl("controls_container");
-            ExtraControlsHandler.generateLeftHandedControls();*/
             Utility.removeElementByClass("upButton1");
             ExtraControlsHandler.generateUpButton(0);
         }
@@ -445,8 +444,6 @@ class ObstacleTypeZero extends Obstacle{
     }
 
     genObstacle() {
-        //this.ctx.fillStyle = "blue";
-        //this.ctx.fillRect(this.x, this.y, this.width, this.height);
         this.ctx.drawImage(this.obst, this.x, this.y, this.width, this.height)
     }
     updateObstaclePosition(speed=1){
@@ -468,8 +465,6 @@ class ObstacleTypeOne extends Obstacle{
         this.obst.src = Resource.OBSTACLE1_IMAGE;
     }
     genObstacle() {
-        //this.ctx.fillStyle = "red";
-        //this.ctx.fillRect(this.x, this.y, this.width, this.height);
         this.ctx.drawImage(this.obst, this.x, this.y, this.width, this.height)
 
     }
@@ -513,15 +508,15 @@ class JumpPowerUp extends Powerup{
     }
 
     genPowerUp() {
-        /*this.ctx.fillStyle = "green";
-        this.ctx.fillRect(this.x, this.y, this.width, this.height);*/
         this.ctx.drawImage(this.jp, this.x, this.y, this.width, this.height);
     }
 
     activate(){
         game.info.jumpPowerupActivatedInfo();
-        game.player.im_model.src = Resource.PLAYER_NORMAL_P;
-        game.player.im_jump.src = Resource.PLAYER_JUMPING_P;
+        if(!game.player.god) {
+            game.player.im_model.src = Resource.PLAYER_NORMAL_P;
+            game.player.im_jump.src = Resource.PLAYER_JUMPING_P;
+        }
         game.player.speed = 4.2;
         game.player.jumpingPowerUp = true;
         sound.powerup1Sound.play();
@@ -529,8 +524,13 @@ class JumpPowerUp extends Powerup{
     }
 
     static deactivateJumpPowerup() {
-        game.player.im_model.src = Resource.PLAYER_STANDING;
-        game.player.im_jump.src = Resource.PLAYER_JUMPING;
+        if(game.player.god) {
+            game.player.im_model.src = Resource.PLAYER_NORMAL_GM;
+            game.player.im_jump.src = Resource.PLAYER_JUMPING_GM;
+        } else {
+            game.player.im_model.src = Resource.PLAYER_STANDING;
+            game.player.im_jump.src = Resource.PLAYER_JUMPING;
+        }
         game.player.speed = 5.7;
         game.player.jumpingPowerUp = false;
     }
@@ -545,8 +545,6 @@ class ScorePowerUp extends Powerup {
 
     }
     genPowerUp(){
-        /*this.ctx.fillStyle = "red";
-        this.ctx.fillRect(this.x, this.y, this.width, this.height);*/
         this.ctx.drawImage(this.scp, this.x, this.y, this.width, this.height);
     }
 
@@ -554,6 +552,39 @@ class ScorePowerUp extends Powerup {
         game.score.value += 5;
         game.info.scorePowerupActivatedInfo();
         sound.powerup2Sound.play();
+    }
+}
+
+class GodMode extends Powerup {
+    constructor(x,y) {
+        super(x,y);
+        this.gmp = new Image();
+        this.gmp.src = Resource.GOD_MODE_POWERUP;
+        this.genPowerUp();
+    }
+
+    genPowerUp() {
+        this.ctx.drawImage(this.gmp, this.x, this.y, this.width, this.height);
+    }
+
+    activate() {
+        game.player.god = true;
+        game.info.godModeInfo();
+        game.player.im_model.src = Resource.PLAYER_NORMAL_GM;
+        game.player.im_jump.src = Resource.PLAYER_JUMPING_GM;
+        sound.powerup3Sound.play();
+        setInterval(GodMode.deactivateGodMode, 12000);
+    }
+
+    static deactivateGodMode() {
+        if(game.player.jumpingPowerUp) {
+            game.player.im_model.src = Resource.PLAYER_NORMAL_P;
+            game.player.im_jump.src = Resource.PLAYER_JUMPING_P;
+        } else {
+            game.player.im_model.src = Resource.PLAYER_STANDING;
+            game.player.im_jump.src = Resource.PLAYER_JUMPING;
+        }
+        game.player.god = false;
     }
 }
 
@@ -618,6 +649,12 @@ class InfoText extends CanvasWriter{
         this.write();
     }
 
+    godModeInfo() {
+        this.frameGM = game.frameCount;
+        this.text = "GOD MODE ACTIVATED";
+        this.write();
+    }
+
     keepVisible(noFrames, frameActivated){
         if(game.frameCount - frameActivated <= noFrames) {
             this.ctx.font = "bold 16px Arial";
@@ -628,6 +665,7 @@ class InfoText extends CanvasWriter{
     updateInfo(){
         this.keepVisible(150, this.frameJ);
         this.keepVisible(150, this.frameS);
+        this.keepVisible(150, this.frameGM);
     }
 }
 
@@ -691,15 +729,17 @@ class ObjectGenController {
         } if (game.isCondEveryInterval(this.intervalTwo)){
             this.obstaclesOne.push(new ObstacleTypeOne(-35, this.genY[1]));
         }  if (game.isCondEveryInterval(1002)){
-            this.powerups[0] = (new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
-        }  if (game.isCondEveryInterval(1200)){
-            this.powerups[1] = (new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
+            this.powerups.push(new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
+        }  if (game.isCondEveryInterval(1250)){
+            this.powerups.push(new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
         }  if(game.isCondEveryInterval(2700)){
             this.swapY();
         }  if(game.isCondEveryInterval(3000)) {
             this.changeCanvasColor();
         }  if(game.isCondEveryInterval(4200)) {
             this.revertCanvasColor();
+        } if(game.isCondEveryInterval(3500)) {
+            this.powerups.push(new GodMode(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(120, 170))));
         }
     }
 
@@ -715,16 +755,6 @@ class ObjectGenController {
         var zeroEl = this.genY[0];
         this.genY[0] = this.genY[1];
         this.genY[1] = zeroEl;
-    }
-
-    updatePowerupStatus(){
-        if((this.powerups[0])) {
-            this.powerups[0].keepActive();
-        }
-
-        if(this.powerups[1]){
-            this.powerups[1].keepActive(600);
-        }
     }
 
     increaseDifficulty(){
@@ -814,6 +844,9 @@ class CollisionHandler extends SplitScreen {
         for (var j = 0; j < obstacleArray.length; j+=1) {
             obstacleArray[j].updateObstaclePosition(multiplier * game.objectControl.speedIncreaseCoef);
 
+            if(game.player.god)
+                continue;
+
             if(Utility.isBetween(obstacleArray[j].x, this.intervalsArray[i], this.intervalsArray[i+1])){
                 if(CollisionHandler.checkCollisionOnTwoObjects(game.player, obstacleArray[j])) {
                     game.gameover = true;
@@ -822,9 +855,15 @@ class CollisionHandler extends SplitScreen {
         }
     }
 
-    loopPowerUps(powerupArray, i) {                                                                         // dnt loop
-        for (var j = 0; j < powerupArray.length; j+=1) {
-            try {
+    loopPowerUps(powerupArray, i) {
+        if (powerupArray.length > 0) {
+            for (var j = 0; j < powerupArray.length; j += 1) {
+
+                if(powerupArray[j] instanceof ScorePowerUp || powerupArray[j] instanceof GodMode) {
+                    powerupArray[j].keepActive(600);
+                } else {
+                    powerupArray[j].keepActive();
+                }
                 if (Utility.isBetween(powerupArray[j].x, this.intervalsArray[i], this.intervalsArray[i + 1])) {
                     if (CollisionHandler.checkCollisionOnTwoObjects(game.player, powerupArray[j]) && powerupArray[j].active) {
                         powerupArray[j].activate();
@@ -832,8 +871,6 @@ class CollisionHandler extends SplitScreen {
                         break;
                     }
                 }
-            } catch (TypeError){
-                j = 0;
             }
         }
     }
@@ -872,6 +909,7 @@ class SoundController {
         this.jumpSound = new Audio(Resource.JUMP_SOUND);
         this.powerup1Sound = new Audio(Resource.POWUP_SOUND_1);
         this.powerup2Sound = new Audio(Resource.POWUP_SOUND_2);
+        this.powerup3Sound = new Audio(Resource.POWUP_SOUND_3)
     }
 
     mute() {
@@ -880,6 +918,7 @@ class SoundController {
         this.jumpSound.volume = 0;
         this.powerup1Sound.volume = 0;
         this.powerup2Sound.volume = 0;
+        this.powerup3Sound.volume = 0;
         this.muted = true;
     }
 
@@ -889,6 +928,7 @@ class SoundController {
         this.jumpSound.volume = 1;
         this.powerup1Sound.volume = 1;
         this.powerup2Sound.volume = 1;
+        this.powerup3Sound.volume = 1;
         this.muted = false;
     }
 }
@@ -982,7 +1022,6 @@ function update(){
     game.objectControl.pushObjectPlus();
     game.objectControl.increaseDifficulty();
     game.collisionControl.checkInterval();
-    game.objectControl.updatePowerupStatus();
     game.player.updatePlayerPosition();
     game.score.updateScore();
     game.info.updateInfo();

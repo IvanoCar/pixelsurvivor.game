@@ -8,14 +8,14 @@ keys = [];
 friction = 0.8;
 gravity = 0.3;
 
-
+/*
 class Globals {}
 Globals.keys = [];
 Globals.friction = 0.8;
 Globals.gravity = 0.3;
 Globals.game = undefined;
 Globals.sound = undefined;
-
+*/
 
 class Resource{}
 Resource.CANVAS_NAME = "gamecanvas";
@@ -666,7 +666,6 @@ class InfoText extends CanvasWriter{
     }
 }
 
-
 class Cookie {
     static set(name, value) {
         document.cookie = name + "=" + value;
@@ -735,7 +734,7 @@ class ObjectGenController {
             this.changeCanvasColor();
         }  if(game.isCondEveryInterval(4200)) {
             this.revertCanvasColor();
-        } if(game.isCondEveryInterval(3500)) {
+        } if(game.isCondEveryInterval(2800)) {
             this.powerups.push(new GodMode(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(120, 170))));
         }
     }
@@ -985,22 +984,6 @@ class Game {
         window.addEventListener("load",function(){
             update();
         });
-    }
-
-    static removeListeners() {
-        document.body.removeEventListener("keydown", function(e) {
-            keys[e.keyCode] = true;
-            Keys.update();
-        });
-
-        document.body.removeEventListener("keyup", function(e) {
-            keys[e.keyCode] = false;
-            Keys.update();
-        });
-
-        /*window.removeEventListener("load",function(){
-            update();
-        });*/
     }
 }
 

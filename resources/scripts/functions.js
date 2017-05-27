@@ -424,6 +424,7 @@ class Obstacle extends ObjectGeneration {
         super(x,y);
     }
     updateObstaclePosition(speed=1){}
+    destroy(){}
 }
 
 class ObstacleTypeZero extends Obstacle{
@@ -447,6 +448,10 @@ class ObstacleTypeZero extends Obstacle{
         this.x -= speed;
         this.genObstacle();
     }
+    destroy() {
+        return this.x <= -31;
+
+    }
 }
 
 class ObstacleTypeOne extends Obstacle{
@@ -468,6 +473,9 @@ class ObstacleTypeOne extends Obstacle{
     updateObstaclePosition(speed=1){
         this.x += speed;
         this.genObstacle();
+    }
+    destroy() {
+        return this.x >= game.objectControl.canvas.width + 31;
     }
 }
 
@@ -704,8 +712,7 @@ class GameOver {
 
 class ObjectGenController {
     constructor(canvas) {
-        this.obstaclesZero = [];
-        this.obstaclesOne = [];
+        this.obstacles = [];
         this.powerups = [];
         this.canvas = canvas;
         this.x = this.canvas.width;
@@ -721,9 +728,9 @@ class ObjectGenController {
 
     pushObjectPlus(){
         if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){
-            this.obstaclesZero.push(new ObstacleTypeZero(this.x, this.genY[0]));
+            this.obstacles.push(new ObstacleTypeZero(this.x, this.genY[0]));
         } if (game.isCondEveryInterval(this.intervalTwo)){
-            this.obstaclesOne.push(new ObstacleTypeOne(-35, this.genY[1]));
+            this.obstacles.push(new ObstacleTypeOne(-35, this.genY[1]));
         }  if (game.isCondEveryInterval(1002)){
             this.powerups.push(new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
         }  if (game.isCondEveryInterval(1250)){
@@ -826,19 +833,23 @@ class CollisionHandler extends SplitScreen {
 
         for (var i = 0; i < this.intervalsArray.length; i++) {
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
-                this.loopObstacles(game.objectControl.obstaclesZero, 2, i);
-                this.loopObstacles(game.objectControl.obstaclesOne, 1.25, i);
+                this.loopObstacles(game.objectControl.obstacles, i);
                 this.loopPowerUps(game.objectControl.powerups, i);
                 break;
             }
-            CollisionHandler.popExtra(game.objectControl.obstaclesZero, 0);
-            CollisionHandler.popExtra(game.objectControl.obstaclesOne, 1);
+            CollisionHandler.popExtra(game.objectControl.obstacles);
+            console.log(["Obstacle array size:", game.objectControl.obstacles.length]);
         }
     }
 
-    loopObstacles(obstacleArray, multiplier,  i) {
+    loopObstacles(obstacleArray, i) {
         for (var j = 0; j < obstacleArray.length; j+=1) {
-            obstacleArray[j].updateObstaclePosition(multiplier * game.objectControl.speedIncreaseCoef);
+
+            if(obstacleArray[j] instanceof ObstacleTypeZero) {
+                obstacleArray[j].updateObstaclePosition(2 * game.objectControl.speedIncreaseCoef);
+            } else {
+                obstacleArray[j].updateObstaclePosition(1.25 * game.objectControl.speedIncreaseCoef);
+            }
 
             if(game.player.god)
                 continue;
@@ -870,13 +881,11 @@ class CollisionHandler extends SplitScreen {
             }
         }
     }
-    static popExtra(obstaclesArray, mode) {
-        if(mode == 0) {
-            if (obstaclesArray[1] && obstaclesArray[1].x <= -31)
-                obstaclesArray.splice(0, 2);
-        } else { // if mode == 1
-            if(obstaclesArray[1] && obstaclesArray[1].x >= game.objectControl.canvas.width + 31)
-                obstaclesArray.splice(0, 2);
+    static popExtra(obstaclesArray) {
+        if(obstaclesArray[1]) {                                                             // or destroy one at a time
+            if (obstaclesArray[0].destroy() && obstaclesArray[1].destroy()) {
+                obstaclesArray.splice(0, 2)
+            }
         }
     }
 }
@@ -991,10 +1000,10 @@ Game.setup();
 
 function update(){
     if(!game) return;
-    if(game.gameover){
+    /*if(game.gameover){
         Game.endGame();
         return;
-    }
+    }*/
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;

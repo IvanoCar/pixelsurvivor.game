@@ -718,6 +718,7 @@ class ObjectGenController {
         this.x = this.canvas.width;
         this.y = this.canvas.height;
         this.speedIncreaseCoef = 1;
+        this.choosePowup = undefined;
         this.intervalOne = 150;
         this.intervalTwo = 200;
         this.intervalCap = 90;
@@ -731,20 +732,40 @@ class ObjectGenController {
             this.obstacles.push(new ObstacleTypeZero(this.x, this.genY[0]));
         } if (game.isCondEveryInterval(this.intervalTwo)){
             this.obstacles.push(new ObstacleTypeOne(-35, this.genY[1]));
-        }  if (game.isCondEveryInterval(1002)){
+        }
+
+        if(game.isCondEveryInterval(500)) {
+            this.choosePowup = Utility.randInt(1,3);
+            switch (this.choosePowup) {
+                case 1:
+                    this.powerups.push(new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
+                    break;
+                case 2:
+                    this.powerups.push(new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
+                    break;
+                case 3:
+                    this.powerups.push(new GodMode(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(120, 170))));
+                    break;
+            }
+        }
+
+        /*if (game.isCondEveryInterval(1002)){
             this.powerups.push(new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
-        }  if (game.isCondEveryInterval(1250)){
+        }
+        if (game.isCondEveryInterval(1250)){
             this.powerups.push(new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
-        }  if(game.isCondEveryInterval(2700)){
+        }
+        if(game.isCondEveryInterval(2800)) {
+            this.powerups.push(new GodMode(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(120, 170))));
+        }*/
+
+        if(game.isCondEveryInterval(2700)){
             this.swapY();
         }  if(game.isCondEveryInterval(3000)) {
             this.changeCanvasColor();
         }  if(game.isCondEveryInterval(4200)) {
             this.revertCanvasColor();
-        } if(game.isCondEveryInterval(2800)) {
-            this.powerups.push(new GodMode(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(120, 170))));
         }
-        console.log(this.powerups.length);
     }
 
     changeCanvasColor() {

@@ -744,6 +744,7 @@ class ObjectGenController {
         } if(game.isCondEveryInterval(2800)) {
             this.powerups.push(new GodMode(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(120, 170))));
         }
+        console.log(this.powerups.length);
     }
 
     changeCanvasColor() {
@@ -837,8 +838,9 @@ class CollisionHandler extends SplitScreen {
                 this.loopPowerUps(game.objectControl.powerups, i);
                 break;
             }
-            CollisionHandler.popExtra(game.objectControl.obstacles);
-            console.log(["Obstacle array size:", game.objectControl.obstacles.length]);
+            GarbageCollector.obstacles(game.objectControl.obstacles);
+            GarbageCollector.powerups(game.objectControl.powerups);
+            //console.log(["Obstacle array size:", game.objectControl.obstacles.length]);
         }
     }
 
@@ -881,12 +883,22 @@ class CollisionHandler extends SplitScreen {
             }
         }
     }
-    static popExtra(obstaclesArray) {
+}
+
+class GarbageCollector {
+    static obstacles(obstaclesArray) {
         if(obstaclesArray[1]) {                                                             // or destroy one at a time
             if (obstaclesArray[0].destroy() && obstaclesArray[1].destroy()) {
-                obstaclesArray.splice(0, 2)
+                obstaclesArray.splice(0, 2);
             }
         }
+    }
+
+    static powerups(powerupsArray) {
+        if(powerupsArray.length > 4){
+            powerupsArray.splice(0,1);
+        }
+
     }
 }
 
@@ -1000,10 +1012,10 @@ Game.setup();
 
 function update(){
     if(!game) return;
-    /*if(game.gameover){
+    if(game.gameover){
         Game.endGame();
         return;
-    }*/
+    }
     game.clearCanvas();
     game.keyEventHandler();
     game.frameCount += 1;

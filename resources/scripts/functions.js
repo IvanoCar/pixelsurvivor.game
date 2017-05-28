@@ -48,10 +48,13 @@ class Canvas {
             this.canvas.width = 800;
             this.needsTouchControls = false;
             this.sizeCoef = 1;
+            this.powerupSizeCoef = 1;
         } else {
             this.canvas.width = Utility.getScreenWidth() - 10;
             this.needsTouchControls = true;
             this.sizeCoef = 0.65;
+            this.powerupSizeCoef = 0.8;
+
         }
 
         if(Utility.getScreenHeight() < 500) {
@@ -488,8 +491,8 @@ class Powerup extends ObjectGeneration {
 
     }
     powerupSetup() {
-        this.width = 30 * game.sizeCoef;
-        this.height = 30 * game.sizeCoef;
+        this.width = 30 * game.powerupSizeCoef;
+        this.height = 30 * game.powerupSizeCoef;
     }
 
     keepActive(noFrames=400){
@@ -738,7 +741,7 @@ class ObjectGenController {
             this.pushPowerup();
         }
 
-        if(game.isCondEveryInterval(1000)) {
+        if(game.isCondEveryInterval(1100)) {
             this.pushPowerup();
         }
 

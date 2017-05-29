@@ -4,4 +4,4 @@
 
 The game is hosted here: [Link](http://celtra.domus-properties.com)
 
-The documentation in pdf can be downloaded here:
+The documentation in pdf can be downloaded here: [celtra_doc.pdf](http://celtra.domus-properties.com/celtra_doc.pdf)

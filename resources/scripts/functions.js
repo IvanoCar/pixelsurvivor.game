@@ -314,11 +314,14 @@ class Utility {
     static getCanvasContext(){
         return document.getElementById(Resource.CANVAS_NAME).getContext(Resource.CANVAS_CONTEXT);
     }
+
+    static getCanvasWidth() {
+        return document.getElementById(Resource.CANVAS_NAME).width;
+    }
 }
 
 class ExtraControlsHandler {
     static generateLeftHandedControls() {
-        console.log("Generate left.");
         Utility.deleteChildrenOnEl("controls_container");
         Utility.generateNewButton("<", "controls_container", "leftButton");
         Utility.generateNewButton(">", "controls_container", "rightButton");
@@ -332,7 +335,6 @@ class ExtraControlsHandler {
     }
 
     static generateRightHandedControls() {
-        console.log("Generate right.");
         Utility.deleteChildrenOnEl("controls_container");
         Utility.generateNewButton("<", "controls_container", "leftButton");
         Utility.generateNewButton(">", "controls_container", "rightButton");
@@ -722,8 +724,7 @@ class ObjectGenController {
         this.y = this.canvas.height;
         this.speedIncreaseCoef = 1;
         this.choosePowup = undefined;
-        this.intervalOne = 150;
-        this.intervalTwo = 200;
+        this.genIntervals = [150, 200];
         this.intervalCap = 90;
 
         this.genY = [this.y - 162, this.y - 362];
@@ -731,9 +732,9 @@ class ObjectGenController {
     }
 
     pushObjectPlus(){
-        if (game.frameCount == 1 || game.isCondEveryInterval(this.intervalOne)){
+        if (game.frameCount == 1 || game.isCondEveryInterval(this.genIntervals[0])){
             this.obstacles.push(new ObstacleTypeZero(this.x, this.genY[0]));
-        } if (game.isCondEveryInterval(this.intervalTwo)){
+        } if (game.isCondEveryInterval(this.genIntervals[1])){
             this.obstacles.push(new ObstacleTypeOne(-35, this.genY[1]));
         }
 
@@ -741,7 +742,7 @@ class ObjectGenController {
             this.pushPowerup();
         }
 
-        if(game.isCondEveryInterval(1100)) {
+        if(game.isCondEveryInterval(1300)) {
             this.pushPowerup();
         }
 
@@ -760,7 +761,7 @@ class ObjectGenController {
     }
 
     pushPowerup() {
-        this.choosePowup = Utility.randInt(1,3);
+        this.choosePowup = Utility.randInt(1,2);
         switch (this.choosePowup) {
             case 1:
                 this.powerups.push(new JumpPowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(130, 150))));
@@ -768,12 +769,8 @@ class ObjectGenController {
             case 2:
                 this.powerups.push(new ScorePowerUp(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(100, 140))));
                 break;
-            /*case 3:
-                this.powerups.push(new GodMode(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(120, 170))));
-                break;*/
         }
     }
-
 
     changeCanvasColor() {
         this.canvas.style.backgroundColor = "#007DFF";
@@ -796,15 +793,16 @@ class ObjectGenController {
             else
                 this.speedIncreaseCoef = 4.9;
 
-            if(this.intervalOne > this.intervalCap)
-                this.intervalOne -= 8;
+            // add for loop for more obstacles
+            if(this.genIntervals[0] > this.intervalCap)
+                this.genIntervals[0] -= 8;
             else
-                this.intervalOne = this.intervalCap;
+                this.genIntervals[0] = this.intervalCap;
 
-            if (this.intervalTwo > this.intervalCap)
-                this.intervalTwo -= 10;
+            if (this.genIntervals[1] > this.intervalCap)
+                this.genIntervals[1] -= 10;
             else
-                this.intervalTwo = this.intervalCap;
+                this.genIntervals[1] = this.intervalCap;
         }
     }
 }
@@ -812,24 +810,21 @@ class ObjectGenController {
 class SplitScreen {
 
     constructor() {
-        this.array = [];
-        this.max = Utility.getScreenWidth();
+        this.intervalsArray = [];
+        this.max = Utility.getCanvasWidth();
         this.splitScreen();
     }
 
     splitScreen() {
         var intervals = this.calculateScreenFragments();
         for(var i = 0; this.max > i;) {
-            this.array.push(this.max/intervals + i);
+            this.intervalsArray.push(Math.round(this.max/intervals + i));
             i = this.max/intervals + i;
         }
-        this.array.splice(0, 0, 0);
-    }
-    getArray(){
-        return this.array;
+        this.intervalsArray.splice(0, 0, 0);
     }
 
-    calculateScreenFragments(){
+    calculateScreenFragments(){ // game screen fragments
         return (Math.round(this.max / 75));
     }
 }
@@ -837,28 +832,14 @@ class SplitScreen {
 class CollisionHandler extends SplitScreen {
     constructor() {
         super();
-        this.intervalsArray = this.getArray();
-
-        /*
-        this.arrayHalf = Math.ceil(this.intervalsArray.length/2);
-        this.half = this.intervalsArray[this.arrayHalf];*/
     }
 
-    static checkCollisionOnTwoObjects(object1, object2) {                                               // IMPRROVE!
+    static checkCollisionOnTwoObjects(object1, object2) {
         return (object1.x < object2.x + object2.width  && object1.x + object1.width  > object2.x &&
             object1.y < object2.y + object2.height && object1.y + object1.height > object2.y)
     }
 
     checkInterval() {
-        /*var index, max;
-        if (game.player.x > this.half) {
-            index = this.arrayHalf;
-            max = this.intervalsArray.length - 1;
-        } else {
-            index = 0;
-            max = this.arrayHalf - 1;
-        }
-         for (var i = index; i < max; i++) {*/
 
         for (var i = 0; i < this.intervalsArray.length; i++) {
             if(Utility.isBetween(game.player.x, this.intervalsArray[i], this.intervalsArray[i + 1])){
@@ -868,7 +849,6 @@ class CollisionHandler extends SplitScreen {
             }
             GarbageCollector.obstacles(game.objectControl.obstacles);
             GarbageCollector.powerups(game.objectControl.powerups);
-            //console.log(["Obstacle array size:", game.objectControl.obstacles.length]);
         }
     }
 

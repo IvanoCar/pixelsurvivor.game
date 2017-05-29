@@ -3,19 +3,13 @@
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
+
+// GLOBALS
 var keys, friction, gravity, game, sound;
 keys = [];
 friction = 0.8;
 gravity = 0.3;
 
-/*
-class Globals {}
-Globals.keys = [];
-Globals.friction = 0.8;
-Globals.gravity = 0.3;
-Globals.game = undefined;
-Globals.sound = undefined;
-*/
 
 class Resource{}
 Resource.CANVAS_NAME = "gamecanvas";
@@ -54,7 +48,6 @@ class Canvas {
             this.needsTouchControls = true;
             this.sizeCoef = 0.65;
             this.powerupSizeCoef = 0.8;
-
         }
 
         if(Utility.getScreenHeight() < 500) {
@@ -209,7 +202,9 @@ class GameController extends Canvas{
             this.player.left();
         }
     }
+
     isCondEveryInterval(n){
+        // return true if n frames have passed
         return (this.frameCount / n) % 1 == 0;
     }
 
@@ -237,11 +232,12 @@ class Utility {
     }
 
     static generateNewDiv(appendTo, classToApply) {                                                                 //?
-        var element = document.createElement("div");
+        var element = document.createElement("DIV");
         document.getElementById(appendTo).appendChild(element).classList.add(classToApply);
     }
 
     static removeElementByClass(className) {
+        // removes only the first element found
         document.getElementsByClassName(className)[0].remove();
     }
 
@@ -355,6 +351,7 @@ class ExtraControlsHandler {
         }
     }
 
+    // show controls for player movement on the bottom of the screen
     static generateAdditionalControls() {
         Utility.generateNewParagraphElement("Are you left handed or right handed?", "controls_container", "centeredDiv");
         Utility.generateNewButton("Left", "controls_container", "buttonStyle");
@@ -366,6 +363,7 @@ class ExtraControlsHandler {
         Utility.generateNewButton("MUTE", "header", "muteSmall");
     }
 
+    // show buttons on the left panel -> mute and button for showing player movement onscreen controls
     static generateExtraButtons(){
         Utility.generateNewButton("GIVE EXTRA CONTROLS", "extrabuttons", "addButton");
         Utility.generateNewButton("MUTE", "extrabuttons", "muteButton");
@@ -455,7 +453,6 @@ class ObstacleTypeZero extends Obstacle{
     }
     destroy() {
         return this.x <= -31;
-
     }
 }
 
@@ -725,9 +722,9 @@ class ObjectGenController {
         this.speedIncreaseCoef = 1;
         this.choosePowup = undefined;
         this.genIntervals = [150, 200];
-        this.intervalCap = 90;
+        this.intervalCap = 90; // ensures that generation speed does not go under 90 frames
 
-        this.genY = [this.y - 162, this.y - 362];
+        this.genY = [this.y - 162, this.y - 362]; // y-axis coordinates for obstacles when generated
 
     }
 
@@ -747,8 +744,8 @@ class ObjectGenController {
         }
 
         if(game.isCondEveryInterval(2500)) {
+            // show god mode powerup -> not in pushPowerup function so it doesnt get shown as often
             this.powerups.push(new GodMode(Utility.randInt(30, this.x - 30), this.y - (Utility.randInt(120, 170))));
-
         }
 
         if(game.isCondEveryInterval(2700)){
@@ -895,7 +892,8 @@ class CollisionHandler extends SplitScreen {
 
 class GarbageCollector {
     static obstacles(obstaclesArray) {
-        if(obstaclesArray[1]) {                                                             // or destroy one at a time
+        // pops every other obstacle that goes off screen from the obstacles array
+        if(obstaclesArray[1]) {
             if (obstaclesArray[0].destroy() && obstaclesArray[1].destroy()) {
                 obstaclesArray.splice(0, 2);
             }

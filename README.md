@@ -2,6 +2,4 @@
 
 # CELTRA's programming challenge 2017 | HTML5, JS game #
 
-The game is hosted here: [Link](http://celtra.domus-properties.com)
-
-The documentation in pdf can be downloaded here: [celtra_doc.pdf](http://celtra.domus-properties.com/celtra_doc.pdf)
+Cloned from original BitBucket repo. Check PDF for more info about the project.

@@ -3,3 +3,4 @@
 # CELTRA's programming challenge 2017 | HTML5, JS game #
 
 Cloned from original BitBucket repo. Check PDF for more info about the project.
+Winning project. https://www.celtra.com/

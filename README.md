@@ -1,4 +1,4 @@
-![game_name.png](https://bitbucket.org/repo/ngERbAG/images/300376400-game_name.png)
+![game_name.png](resources/images/page_res/game_name.png)
 
 # CELTRA's programming challenge 2017 | HTML5, JS game #
 
